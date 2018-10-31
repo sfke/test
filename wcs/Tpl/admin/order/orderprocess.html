@@ -1,0 +1,475 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>CMS</title>
+    <link href="__CSS__/common.css" rel="stylesheet"/>
+    <link href="__CSS__/right.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="__CSS__/extjs/css/ext-all.css"/>
+    <script type="text/javascript" language="javascript" src="__JS__/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="__JS__/extjs/ext-base.js"></script>
+    <script type="text/javascript" src="__JS__/extjs/ext-all.js"></script>
+    <script type="text/javascript" src="__JS__/extjs/ext-lang-zh_CN.js"></script>
+    <script charset="utf-8" src="__JS__/common.js"></script>
+    <style type="text/css">
+        .x-grid3-col {
+            padding: 5px;
+        }
+        .x-grid-back-red {
+            background: #EEEEEE;
+        }
+        #orderInfoWindow table tr td img {
+            width: 90px;
+            padding: 2px;
+            border: 1px solid #F8F8F8;
+        }
+    </style>
+</head>
+<body>
+<!--右侧区域 begin-->
+<div class="right">
+    <!--当前位置 begin-->
+    <include file='common:crumbs'/>
+    <!--当前位置 end-->
+    <!--主体区域 begin-->
+    <div class="container">
+        <div class="alert_div">
+            <h4 class="alert_info"><span class="welcome">{$welcome}</span>您现在的位置是：{$current} </h4>
+            <h4 class="alert_what" style="display:none;"></h4>
+        </div>
+        <!--样式一 begin-->
+        <div class="stats">
+            <div class="lm_title">
+                <div class="lm_title_l"><em>商城订单处理</em></div>
+            </div>
+            <div class="lm_content">
+                <div id="orderprocessfrom"></div>
+                <div id="grid"></div>
+            </div>
+            <div class="lm_bottom">
+                <div class="lm_bottom_l"><em></em></div>
+            </div>
+        </div>
+        <!--样式一 end-->
+    </div>
+    <!--主体区域 end-->
+</div>
+<!--右侧区域  end-->
+</body>
+<script type="text/javascript">
+var order_id = {$oid};
+var order_close = {$orderClose};
+var order_shippinged = {$orderShiped};
+var order_payback = {$payback};
+var order_edit = {$orderEdit};
+
+var order_sn = "{$orderInfo['sn']}";
+var order_status = "{$orderInfo['status']}";
+var order_start_time = "{$orderInfo['add_time']}";
+var order_pay_time = "{$orderInfo['pay_time']}";
+var order_shipping_time = "{$orderInfo['shipping_time']}";
+var order_consignee = "{$orderInfo['consignee']}";
+var order_mobile = "{$orderInfo['mobile']}";
+var order_zipcode = "{$orderInfo['zipcode']}";
+var order_address = "{$orderInfo['address']}";
+var order_userid = "{$orderInfo['userid']}";
+var order_shipping_code = "{$orderInfo['scode']}";
+var order_shipping_type = "{$orderInfo['shipping_type']}";
+var order_shipping_name = "{$orderInfo['sname']}";
+var order_remark = "{$orderInfo['remark']}";
+var order_msgtobuyer = "{$orderInfo['msgtobuyer']}";
+
+Ext.util.CSS.swapStyleSheet("theme", "__CSS__/extjs/css/xtheme-gray.css");
+
+//调用函数开始
+function loadCallBack(records, options, success) {
+    var totleprice = records[0].store.reader.jsonData.totleprice;
+    var totleweight = records[0].store.reader.jsonData.totleweight;
+    var totleshippingprice = records[0].store.reader.jsonData.shippingprice;
+    var totlepay = records[0].store.reader.jsonData.totlepay;
+    Ext.getCmp("totleWeightInfo").setValue(totleweight);
+    Ext.getCmp("totlePriceInfo").setValue(totleprice);
+    Ext.getCmp("totleShippingPrice").setValue(totleshippingprice);
+    Ext.getCmp("totlePay").setValue(totlepay);
+}
+//调用函数结束
+
+Ext.onReady(function () {
+    Ext.QuickTips.init();
+    var shippingSnMsgBox = new Ext.Window({
+        title: "物流信息录入",
+        autoHeight: true,
+        width: 310,
+        labelWidth: 60,
+        labelAlign: "left",
+        closeAction: 'hide',// 隐藏窗口
+        items: new Ext.form.FormPanel({
+            autoHeight: true,
+            labelWidth: 60,
+            labelAlign: "right",
+            frame: true,
+            defaults: {
+                xtype: "textfield",
+                width: 180
+            },
+            items: [
+                {id: "shippingName", fieldLabel: "物流名称", width: 80, allowBlank: false, blankText: "形如：‘EMS’、‘申通快递’、‘自提’ 等", value: order_shipping_name},
+                {id: "shippingCode", fieldLabel: "物流单号", vtype: 'alphanum', value: order_shipping_code}
+            ],
+            buttons: [
+                {text: "提交", handler: function () {
+                    var shippingName = Ext.getCmp("shippingName").getValue();
+                    var shippingCode = Ext.getCmp("shippingCode").getValue();
+                    $.post("__GROUP__/extajax/saveShippingInfo", {name: shippingName, code: shippingCode, oid: order_id}, function (data) {
+                        if (data != '') {
+                            if (data['code'] == -1) {
+                                jl_notify(2, data['html']);
+                                return;
+                            } else if (data['code'] == 1) {
+                                location.href = location.href;
+                                return;
+                            }
+                        }
+                    }, 'json')
+
+                }
+                },
+                {text: "取消", handler: function () {
+                    shippingSnMsgBox.hide();
+                }}
+            ]
+        })
+    });
+
+    var sm = new Ext.grid.CheckboxSelectionModel();
+    var cm = new Ext.grid.ColumnModel([
+        {header: '序号', dataIndex: 'id', hidden: true},
+        {header: '订单序号', dataIndex: 'oid', hidden: true},
+        {header: '商品编号', dataIndex: 'gid', hidden: true},
+        {header: '商品名称', dataIndex: 'gname', width: 200},
+        {header: '商品编号', dataIndex: 'gsn', width: 160},
+        {header: '商品单价 （元）', dataIndex: 'gprice', renderer: function (v) {
+            if (v == 0 || v == '')return ""; else return v;
+        }, editor: new Ext.grid.GridEditor(new Ext.form.TextField({
+            allowBlank: false
+        }))},
+        {header: '商品单重 （克）', dataIndex: 'gweight', renderer: function (v) {
+            if (v == 0 || v == '')return ""; else return v;
+        }, editor: new Ext.grid.GridEditor(new Ext.form.TextField({
+            allowBlank: false
+        }))},
+        {header: '购买数量 （件）', dataIndex: 'gnumber', renderer: function (v) {
+            if (v == 0 || v == '')return ""; else return v;
+        }, editor: new Ext.grid.GridEditor(new Ext.form.TextField({
+            allowBlank: false
+        }))},
+        {header: '价格小计 （元）', dataIndex: 'subtotalprice'},
+        {header: '重量小计 （克）', dataIndex: 'subtotalweight'}
+
+    ]);
+
+    var Record = Ext.data.Record.create([
+        {name: 'id', type: 'int'},
+        {name: 'oid', type: 'int'},
+        {name: 'gid', type: 'int'},
+        {name: 'gname', type: 'string'},
+        {name: 'gsn', type: 'string'},
+        {name: 'gprice', type: 'float'},
+        {name: 'gnumber', type: 'int'},
+        {name: 'gweight', type: 'float'},
+        {name: 'gattr', type: 'string'},
+        {name: 'subtotalprice', type: 'float'},
+        {name: 'subtotalweight', type: 'float'}
+    ]);
+
+    // create the Data Store
+    var store = new Ext.data.Store({
+        proxy: new Ext.data.HttpProxy({url: '__GROUP__/extajax/getOrderGoodsJson'}),
+        reader: new Ext.data.JsonReader({root: "rows", idProperty: "id"}, Record),
+        pruneModifiedRecords: true
+    });
+
+    //控件
+    var mybar = new Ext.Toolbar(['-', {
+        text: '删除选中',
+        disabled: order_edit,
+        handler: function () {
+            selectedArr = sm.getSelections();
+            var selectedTotle = sm.getCount();
+            if (Ext.util.Format.undef(selectedArr) == "") {
+                jl_notify(3, "您没有选中任何项！");
+                return;
+            }
+            Ext.Msg.confirm('信息', '确定要删除选中的' + selectedTotle + '条数据？', function (btn) {
+                if (btn == 'yes') {
+                    var items = "";
+                    for (var i = 0; i < selectedTotle; i++) {
+                        if (i > 0 && i < selectedTotle)items += ",";
+                        items += selectedArr[i].id;
+                    }
+                    Ext.lib.Ajax.request(
+                            'POST',
+                            '__GROUP__/extajax/orderGoodsDel',
+                            {success: function (response) {
+                                var myresponse = Ext.util.JSON.decode(response.responseText);
+                                if (myresponse.code == -1) {
+                                    /*                           Ext.Msg.alert('信息', response.responseText, function(){
+                                     store.reload();
+                                     }); */
+                                    jl_notify(2, myresponse.responseText);
+                                } else {
+                                    //store.reload();
+                                    store.load({params: {oid: order_id}, callback: loadCallBack});
+                                    jl_notify(1, myresponse.responseText);
+                                }
+                            }, failure: function () {
+                                Ext.Msg.alert("错误", "与后台联系的时候出现了问题");
+                            }},
+                            'id=' + items
+                    );
+                }
+            });
+        }
+    }, '-', {
+        text: '保存更改',
+        disabled: order_edit,
+        handler: function () {
+            var m = store.modified.slice(0);
+            var jsonArray = [];
+            Ext.each(m, function (item) {
+                var temp = new Object();
+                var oldStore = store.getById(item.data['id']);
+                if (oldStore == null) {
+                    if (Ext.util.Format.undef(item.data.date) != "") {
+                        item.data.date = Ext.util.Format.date(new Date(item.data.date), 'Y-m-d');
+                    }
+                    jsonArray.push(item.data);
+                } else {
+                    for (var i in oldStore.modified) {
+                        temp.id = item.data['id'];
+                        eval("temp." + i + "=item.data." + i + ";");
+                        if (Ext.util.Format.undef(temp.date) != "") {
+                            temp.date = Ext.util.Format.date(new Date(temp.date), 'Y-m-d');
+                        }
+                    }
+                    jsonArray.push(temp);
+                }
+            });
+            Ext.lib.Ajax.request(
+                    'POST',
+                    '__GROUP__/extajax/orderGoodsSave',
+                    {success: function (response) {
+                        var myresponse = Ext.util.JSON.decode(response.responseText);
+                        if (myresponse.code == -1) {
+                            /*                           Ext.Msg.alert('信息', response.responseText, function(){
+                             store.reload();
+                             }); */
+                            jl_notify(2, myresponse.responseText);
+                        } else {
+                            //store.reload();
+                            store.load({params: {oid: order_id}, callback: loadCallBack});
+                            jl_notify(1, myresponse.responseText);
+                        }
+
+                    }, failure: function () {
+                        Ext.Msg.alert("错误", "与后台联系的时候出现了问题");
+                    }},
+                    'data=' + encodeURIComponent(Ext.encode(jsonArray))
+            );
+        }
+    }, '-', {
+        text: '撤销更改',
+        disabled: order_edit,
+        handler: function () {
+            store.reload();
+        }
+    }, '-', {
+        xtype: "button",
+        text: "导出",
+        menu: {
+            items: [
+                {
+                    text: '导出当前页面',
+                    handler: function () {
+                        var lastParams = store.lastOptions.params;
+                        lastParams['exportxls'] = 1;
+                        $.post("__GROUP__/extajax/getOrderGoodsJson", lastParams, function (data) {
+                            if (data != '') {
+                                if (data['code'] == 1) {
+                                    location.href = data['download'];
+                                    //alert(data['download']);
+                                } else {
+
+                                    jl_notify(2, "导出execl数据失败！");
+                                }
+                            }
+                        }, 'json')
+                    }
+                }
+            ]
+        }
+    }
+    ]);
+
+    var form = new Ext.form.FormPanel({
+        labelAlign: 'left',
+        labelWidth: 100,
+        frame: true,
+        url: 'form.jsp',
+        items: [
+            {
+                layout: 'accordion',
+                items: {
+                    xtype: 'fieldset',
+                    title: '订单基本信息',
+                    autoHeight: true,
+                    defaultType: 'textfield',
+                    items: [
+                        {fieldLabel: '订单号', xtype: "label", text: order_sn},
+                        {fieldLabel: '订单状态', xtype: "label", text: order_status},
+                        {fieldLabel: '下单时间', xtype: "label", text: order_start_time},
+                        {fieldLabel: '付款时间', xtype: "label", text: order_pay_time},
+                        {fieldLabel: '发货时间', xtype: "label", text: order_shipping_time},
+                        {fieldLabel: '物流方式', xtype: "label", text: order_shipping_type},
+                        new Ext.form.TextField({
+                            fieldLabel: "物流单号",
+                            id: "order_shipping_sn",
+                            value: order_shipping_code,
+                            width: 200,
+                            readOnly: true,
+                            vtype: 'alphanum'
+                        }),
+                        {fieldLabel: '客户备注', xtype: "label", text: order_remark},
+                        {fieldLabel: '管理员备注', xtype: "label", text: order_msgtobuyer}
+                    ]
+                }
+            },
+            {
+                layout: 'accordion',
+                items: {
+                    xtype: 'fieldset',
+                    title: '收货人信息',
+                    autoHeight: true,
+                    defaultType: 'textfield',
+                    items: [
+                        {fieldLabel: '收货人', xtype: "label", text: order_consignee},
+                        {fieldLabel: '下单账户', xtype: "label", text: order_userid},
+                        {fieldLabel: '联系电话', xtype: "label", text: order_mobile},
+                        {fieldLabel: '邮政编码', xtype: "label", text: order_zipcode},
+                        {fieldLabel: '收货地址', xtype: "label", text: order_address}
+                    ]
+                }
+            },
+            {
+                layout: 'accordion',
+                items: {
+                    xtype: 'fieldset',
+                    title: '商品信息',
+                    autoHeight: true,
+                    defaultType: 'panel',
+                    items: [new Ext.grid.EditorGridPanel({
+                        autoHeight: true,
+                        renderTo: 'grid',
+                        stripeRows: true,
+                        store: store,
+                        cm: cm,
+                        sm: sm,
+                        tbar: mybar
+                    }), new Ext.form.TextField({
+                        fieldLabel: "重量合计（克）",
+                        id: "totleWeightInfo",
+                        value: "",
+                        width: 100,
+                        readOnly: true
+                    }), new Ext.form.TextField({
+                        fieldLabel: "运费合计（元）",
+                        id: "totleShippingPrice",
+                        value: "",
+                        width: 100,
+                        readOnly: true
+                    }), new Ext.form.TextField({
+                        fieldLabel: "价格合计（元）",
+                        id: "totlePriceInfo",
+                        value: "",
+                        width: 100,
+                        readOnly: true
+                    }), new Ext.form.TextField({
+                        fieldLabel: "应付金额（元）",
+                        id: "totlePay",
+                        value: "",
+                        width: 100,
+                        readOnly: true
+                    })]
+                }
+            },
+            {layout: 'accordion',
+                items: {
+                    xtype: 'fieldset',
+                    layout: 'table',
+                    title: '订单操作',
+                    autoHeight: true,
+                    items: [
+                        {xtype: 'tbtext', text: '&nbsp;&nbsp;&nbsp;'},
+                        {
+                            text: '关闭交易',
+                            xtype: 'button',
+                            width: 140,
+                            disabled: order_close,
+                            handler: function () {
+                                Ext.MessageBox.prompt("输入框", "请输入关闭交易原因：", function (bu, txt) {
+                                    if (bu == 'ok') {
+                                        $.post("__GROUP__/extajax/orderClose", {oid: order_id, txt: txt}, function (data) {
+                                            if (data != '') {
+                                                if (data['code'] == -1) {
+                                                    jl_notify(2, data['html']);
+                                                    return;
+                                                } else if (data['code'] == 1) {
+                                                    location.href = location.href;
+                                                    return;
+                                                }
+                                            }
+                                        }, 'json')
+                                    }
+                                }, null, true);
+                            }
+                        },
+                        {xtype: 'tbtext', text: '&nbsp;&nbsp;&nbsp;'},
+                        {
+                            text: '发货 （编辑物流信息）',
+                            xtype: 'button',
+                            width: 140,
+                            disabled: order_shippinged,
+                            handler: function () {
+                                shippingSnMsgBox.show();
+                            }
+                        },
+                        {xtype: 'tbtext', text: '&nbsp;&nbsp;&nbsp;'},
+                        {
+                            text: '退款（关闭交易）',
+                            xtype: 'button',
+                            width: 140,
+                            disabled: order_payback,
+                            handler: function () {
+                                $.post("__GROUP__/extajax/orderPayBack", {oid: order_id}, function (data) {
+                                    if (data != '') {
+                                        if (data['code'] == -1) {
+                                            jl_notify(2, data['html']);
+                                            return;
+                                        } else if (data['code'] == 1) {
+                                            location.href = location.href;
+                                            return;
+                                        }
+                                    }
+                                }, 'json')
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    });
+    form.render("orderprocessfrom");
+    store.load({params: {oid: order_id}, callback: loadCallBack});
+});
+</script>
+</html>

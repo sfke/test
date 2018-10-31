@@ -1,0 +1,27 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+  <title> New Document </title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="Generator" content="EditPlus">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+    <script src="jquery-1.7.2.min.js" type="text/javascript"></script>
+  <script src="fileM.js" type="text/javascript"></script>
+  <link type="text/css" href="css.css" rel="stylesheet"  />
+ </head>
+
+ <body>
+  <div class="fileM_box">
+<div id="fileM" onselectstart ="return false"></div>
+<div class="file_control"><table width="600px;"><td width="150px;"><span class="select_info"></span></td>  <td width="110px;"><button type="button" class="btn1" id="select_ok">选定</button><button type="button" class="btn1" id="file_del">删除</button><button type="button" class="btn1" id="file_rename">更名</button><button type="button" class="btn1" id="file_new">新建</button><button type="button" class="btn1" id="select_cancel">关闭</button></td></table></div>
+</div>
+
+ </body>
+ <script>
+ 	fm = new fileManage();
+	fm.constuct("D:/wamp/www/",1);
+
+ </script>
+</html>

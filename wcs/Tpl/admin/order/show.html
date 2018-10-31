@@ -1,0 +1,421 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>CMS</title>
+    <link href="__CSS__/common.css" rel="stylesheet"/>
+    <link href="__CSS__/right.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="__CSS__/extjs/css/ext-all.css"/>
+    <script type="text/javascript" language="javascript" src="__JS__/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="__JS__/extjs/ext-base.js"></script>
+    <script type="text/javascript" src="__JS__/extjs/ext-all.js"></script>
+    <script type="text/javascript" src="__JS__/extjs/ext-lang-zh_CN.js"></script>
+    <script charset="utf-8" src="__JS__/common.js"></script>
+    <style type="text/css">
+        .x-grid3-col {
+            padding: 5px;
+        }
+        .x-grid-back-red {
+            background: #EEEEEE;
+        }
+        #orderInfoWindow table tr td img {
+            width: 90px;
+            padding: 2px;
+            border: 1px solid #F8F8F8;
+        }
+    </style>
+</head>
+<body>
+<!--右侧区域 begin-->
+<div class="right">
+    <!--当前位置 begin-->
+    <include file='common:crumbs'/>
+    <!--当前位置 end-->
+    <!--主体区域 begin-->
+    <div class="container">
+        <div class="alert_div">
+            <h4 class="alert_info"><span class="welcome">{$welcome}</span>您现在的位置是：{$current} </h4>
+            <h4 class="alert_what" style="display:none;"></h4>
+        </div>
+        <!--样式一 begin-->
+        <div class="stats">
+            <div class="lm_title">
+                <div class="lm_title_l"><em>商城订单管理</em></div>
+            </div>
+            <div class="lm_content">
+                <div id="order_grid"></div>
+                <div id="orderInfoWindow" style="display:none;">
+                    <table width="100%" cellpadding="3" cellspacing="1">
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="lm_bottom">
+                <div class="lm_bottom_l"><em></em></div>
+            </div>
+        </div>
+        <!--样式一 end-->
+    </div>
+    <!--主体区域 end-->
+</div>
+<!--右侧区域  end-->
+</body>
+<script type="text/javascript">
+var listOrderStatus = {$listOrderStatus};
+var pageNum = 10;
+
+//调用函数开始
+function renderControl(value, cellmeta, record, rowIndex, columnIndex, store) {
+    //var str ="<a href='__GROUP__/order/orderprocess?oid="+value+"'> 处理订单 </a>";
+    var str = "<input type='button' onclick=location.href='__GROUP__/order/orderprocess?oid=" + value + "' value=' 处理订单 '></input>";
+    return str;
+}
+
+function showOrderInfoWindow(obj, id) {
+    $.post("__GROUP__/extajax/getOrderGoodsInfo", {id: id}, function (data) {
+        if (data['code'] == -1) {
+            jl_notify(3, "获取订单详细信息失败！请稍后再试！");
+            return;
+        } else if (data['code'] == 1) {
+            $("#orderInfoWindow table tbody").html(data['html']);
+            $("#orderInfoWindow").show();
+            obj.show();
+            return;
+        } else {
+            jl_notify(3, "获取订单详细信息出现异常！请稍后再试！");
+            return;
+        }
+    }, 'json');
+}
+//调用函数结束
+
+Ext.util.CSS.swapStyleSheet("theme", "__CSS__/extjs/css/xtheme-gray.css");
+Ext.QuickTips.init();
+
+/* Ext.apply(Ext.form.VTypes, {
+ IPAddress:  function(v) {
+ return /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(v);
+ },
+
+ IPAddressText: '必须是一个IP地址',
+ IPAddressMask: /[\d\.]/i
+ }); */
+
+Ext.form.VTypes = function () {
+    var alpha = /^[a-zA-Z_]+$/;
+    var alphanum = /^[a-zA-Z0-9_]+$/;
+    var number = /^[0-9]+$/;
+    var email = /^(\w+)([-+.][\w]+)*@(\w[-\w]*\.){1,5}([A-Za-z]){2,4}$/;
+    var url = /(((https?)|(ftp)):\/\/([\-\w]+\.)+\w{2,3}(\/[%\-\w]+(\.\w{2,})?)*(([\w\-\.\?\\\/+@&#;`~=%!]*)(\.\w{2,})?)*\/?)/i;
+    return {
+        'email': function (v) {
+            return email.test(v);
+        },
+        'emailText': '必须是正确的email地址，例如： "user@jiuletech.com"',
+        'emailMask': /[a-z0-9_\.\-@]/i,
+        'url': function (v) {
+            return url.test(v);
+        },
+        'urlText': '必须是一个正确的URL地址，例如： "http:/' + '/www.jiuletech.com"',
+        'alpha': function (v) {
+            return alpha.test(v);
+        },
+        'alphaText': '只能包含字母和下划线',
+        'alphaMask': /[a-z_]/i,
+        'alphanum': function (v) {
+            return alphanum.test(v);
+        },
+        'alphanumText': '只能包含字母、数字、下划线',
+        'alphanumMask': /[a-z0-9_]/i,
+        'number': function (v) {
+            return number.test(v);
+        },
+        'numberText': '只能是数字',
+        'numberMask': /[0-9]/i
+    };
+}();
+
+Ext.onReady(function () {
+    var infoWindow = new Ext.Window({
+        title: '订单详情',
+        width: 700,
+        height: 'auto',
+        plain: false,
+        closeAction: 'hide',// 关闭窗口
+        maximizable: false,
+        draggable: false,
+        resizable: false,
+        contentEl: 'orderInfoWindow'
+    });
+
+    var Record = Ext.data.Record.create([
+        {name: 'id', type: 'int'},
+        {name: 'sn', type: 'string'},
+        {name: 'userid', type: 'string'},
+        {name: 'add_time', type: 'int'},
+        {name: 'consignee', type: 'string'},
+        {name: 'amount', type: 'float'},
+        {name: 'status', type: 'string'}
+    ]);
+
+    // create the Data Store
+    var store = new Ext.data.Store({
+        proxy: new Ext.data.HttpProxy({url: '__GROUP__/extajax/getOrderJson'}),
+        reader: new Ext.data.JsonReader({totalProperty: "results", root: "rows", idProperty: "id"}, Record),
+        pruneModifiedRecords: true, //每次操作清除modified
+        remoteSort: true
+    });
+    //store.load();
+
+    var sm = new Ext.grid.CheckboxSelectionModel();
+    var cm = new Ext.grid.ColumnModel([
+        {header: '序号', dataIndex: 'id', sortable: true, remoteSort: true, width: 45, renderer: function (v, m) {
+            m.css = 'x-grid-back-red';
+            return v;
+        }, hidden: true},
+        {header: '订单编号', dataIndex: 'sn', listeners: {'click': function (a, b, c, d) {
+            var selectRecord = store.getAt(c);
+            showOrderInfoWindow(infoWindow, selectRecord.id);
+        }
+        }},
+        {header: '下单账户', dataIndex: 'userid', width: 60},
+        {header: '收货人', dataIndex: 'consignee', width: 60},
+        {header: '下单时间', dataIndex: 'add_time', sortable: true, remoteSort: true, renderer: function (value, m) {
+            if (value == null || value == 0) {
+                return '';
+            } else {
+                return Ext.util.Format.date(new Date(parseInt(value) * 1000), "Y年m月d日  h:i:s");
+            }
+        }, width: 90},
+        {header: '订单金额 ( 元 )', dataIndex: 'amount', sortable: true, remoteSort: true, width: 70},
+        {header: '订单状态', dataIndex: 'status', width: 100},
+        {header: '操作', dataIndex: 'id', width: 70, renderer: renderControl}
+    ]);
+
+    //控件
+    var mybar = new Ext.Toolbar(['-', {
+        xtype: "button",
+        text: "导出",
+        menu: {
+            items: [
+                {
+                    text: '导出所有页面',
+                    handler: function () {
+                        $.post("__GROUP__/extajax/getOrderJson", {exportxls: 1}, function (data) {
+                            if (data != '') {
+                                if (data['code'] == 1) {
+                                    location.href = data['download'];
+                                    //alert(data['download']);
+                                } else {
+                                    jl_notify(2, "导出execl数据失败！");
+                                }
+                            }
+                        }, 'json')
+                    }
+                },
+                {
+                    text: '导出当前页面',
+                    handler: function () {
+                        var lastParams = store.lastOptions.params;
+                        lastParams['exportxls'] = 1;
+                        $.post("__GROUP__/extajax/getOrderJson", lastParams, function (data) {
+                            if (data != '') {
+                                if (data['code'] == 1) {
+                                    location.href = data['download'];
+                                    //alert(data['download']);
+                                } else {
+
+                                    jl_notify(2, "导出execl数据失败！");
+                                }
+                            }
+                        }, 'json')
+                    }
+                }
+            ]
+        }
+    }, '-', {xtype: "tbtext", text: '订单编号：'},
+        new Ext.form.TextField({
+            id: "filter_sn",
+            vtype: 'alphanum'
+        }), ' ', {xtype: "tbtext", text: '收货人：'}, new Ext.form.TextField({id: "filter_consignee"}), new Ext.form.ComboBox({
+            id: 'filter_orderstatus',
+            name: 'filter_orderstatus',
+            displayField: 'text',
+            valueField: 'value',
+            emptyText: '订单状态',
+            editable: false,
+            readOnly: false,
+            mode: 'local',
+            triggerAction: 'all',
+            width: 100,
+            store: new Ext.data.SimpleStore({
+                fields: ['value', 'text'],
+                data: [
+                    [1, '进行中'],
+                    [2, '交易关闭'],
+                    [3, '交易完成'],
+                    ['', '不限']
+                ]
+            })
+        }), new Ext.form.ComboBox({
+            id: 'filter_shippingstatus',
+            name: 'filter_shippingstatus',
+            displayField: 'text',
+            valueField: 'value',
+            emptyText: '发货状态',
+            editable: false,
+            mode: 'local',
+            triggerAction: 'all',
+            width: 100,
+            store: new Ext.data.SimpleStore({
+                fields: ['value', 'text'],
+                data: [
+                    [1, '未发货'],
+                    [2, '已发货'],
+                    ['', '不限']
+                ]
+            })
+        }), new Ext.form.ComboBox({
+            id: 'filter_paystatus',
+            name: 'filter_paystatus',
+            displayField: 'text',
+            valueField: 'value',
+            emptyText: '付款状态',
+            editable: false,
+            mode: 'local',
+            triggerAction: 'all',
+            width: 100,
+            store: new Ext.data.SimpleStore({
+                fields: ['value', 'text'],
+                data: [
+                    [1, '待付款'],
+                    [2, '已付款'],
+                    [3, '申请退款'],
+                    [4, '已退款'],
+                    ['', '不限']
+                ]
+            })
+        }), {
+            text: '应用筛选',
+            handler: function () {
+                var filter_sn = Ext.getCmp("filter_sn").getValue();
+                var filter_consignee = Ext.getCmp("filter_consignee").getValue();
+                var filter_orderstatus = Ext.getCmp("filter_orderstatus").getValue();
+                var filter_paystatus = Ext.getCmp("filter_paystatus").getValue();
+                var filter_shippingstatus = Ext.getCmp("filter_shippingstatus").getValue();
+                Ext.apply(Ext.getCmp("order_id").store.baseParams, {"filter_like_sn": filter_sn, "filter_like_consignee": filter_consignee, "filter_req_shippingstatus": filter_shippingstatus, "filter_req_orderstatus": filter_orderstatus, "filter_req_paystatus": filter_paystatus});
+                Ext.getCmp("order_id").store.removeAll();
+                Ext.getCmp("order_id").store.load({params: {start: 0, limit: pageNum}});
+            }
+        }
+    ]);
+    var grid = new Ext.grid.EditorGridPanel({
+        id: "order_id",
+        height: 500,
+        autoHeight: true,
+        bodyStyle: 'width:100%',
+        autoWidth: true,
+        title: '',
+        store: store,
+        trackMouseOver: true,
+        loadMask: true,
+        stripeRows: true,
+        cm: cm,
+        sm: sm,
+        clicksToEdit: 1,
+        viewConfig: {
+            forceFit: true,
+            enableRowBody: true,
+            showPreview: true
+        },
+        bbar: [new Ext.PagingToolbar({
+            id: "page_toolbar",
+            pageSize: pageNum,
+            store: store,
+            displayInfo: true,
+            displayMsg: '总共 {2}条数据，当前显示 {0} - {1} 条数据',
+            emptyMsg: "没有数据"
+        }), {xtype: "tbfill"}, {
+            xtype: "button",
+            text: '分页大小',
+            menu: {
+                items: [
+                    {
+                        text: '10条',
+                        handler: function () {
+                            pageNum = 10;
+                            Ext.getCmp("page_toolbar").pageSize = pageNum;
+                            Ext.getCmp("page_num_text").setValue(pageNum);
+                            store.removeAll();
+                            store.load({params: {start: 0, limit: pageNum}});
+                        }
+                    },
+                    {
+                        text: '20条',
+                        handler: function () {
+                            pageNum = 20;
+                            Ext.getCmp("page_toolbar").pageSize = pageNum;
+                            Ext.getCmp("page_num_text").setValue(pageNum);
+                            store.removeAll();
+                            store.load({params: {start: 0, limit: pageNum}});
+                        }
+                    },
+                    {
+                        text: '30条',
+                        handler: function () {
+                            pageNum = 30;
+                            Ext.getCmp("page_toolbar").pageSize = pageNum;
+                            Ext.getCmp("page_num_text").setValue(pageNum);
+                            store.removeAll();
+                            store.load({params: {start: 0, limit: pageNum}});
+                        }},
+                    {
+                        text: '50条',
+                        handler: function () {
+                            pageNum = 50;
+                            Ext.getCmp("page_toolbar").pageSize = pageNum;
+                            Ext.getCmp("page_num_text").setValue(pageNum);
+                            store.removeAll();
+                            store.load({params: {start: 0, limit: pageNum}});
+                        }},
+                    {
+                        text: '100条',
+                        handler: function () {
+                            pageNum = 100;
+                            Ext.getCmp("page_toolbar").pageSize = pageNum;
+                            Ext.getCmp("page_num_text").setValue(pageNum);
+                            store.removeAll();
+                            store.load({params: {start: 0, limit: pageNum}});
+                        }
+                    }
+                ]
+            }
+        }, new Ext.form.TextField({
+            id: "page_num_text",
+            value: "10",
+            width: 30,
+            disabled: true,
+            vtype: 'alphanum'
+        }), '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'],
+        tbar: mybar
+    });
+
+    // 渲染
+    grid.render('order_grid');
+
+    window.onresize = function () {
+        grid.setWidth(0);
+        grid.setWidth(Ext.get("order_grid").getWidth());
+    };
+    // 取得数据
+    if (listOrderStatus != 0) {
+        Ext.getCmp("filter_orderstatus").setValue(listOrderStatus);
+        Ext.getCmp("filter_orderstatus").readOnly = true;
+        store.load({params: {start: 0, limit: pageNum, filter_req_orderstatus: listOrderStatus}});
+    } else {
+        store.load({params: {start: 0, limit: pageNum}});
+    }
+});
+</script>
+</html>

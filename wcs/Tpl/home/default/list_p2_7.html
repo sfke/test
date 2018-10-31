@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>{$jl_title}</title>
+<meta name="Keywords" content="{$jl_key}">
+<meta name="Description" content="{$jl_desc}">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	
+	<link rel="stylesheet" href="__BASE__/css/animate.min.css"/>
+	<link rel="stylesheet" href="__BASE__/css/common.css" />
+	<link rel="stylesheet" href="__BASE__/css/html5.css">
+    <!--[if lte IE 8]>
+	<script src="__BASE__/js/html5.js" type="text/javascript"></script>
+	<![endif]-->
+	<script type="text/javascript" src="__BASE__/js/jquery1.42.min.js"></script>
+	<script type="text/javascript" src="__BASE__/js/jquery.SuperSlide.2.1.1.js"></script>
+	<script type="text/javascript" src="__BASE__/js/common.js"></script>
+	<script src="__BASE__/js/wow.min.js"></script>   
+</head>
+<body style="background: #e6eef2;">
+<include file='wcs/Tpl/home/default/header.html'/>
+<include file='wcs/Tpl/home/default/nav.html'/>
+<!-- 导航 -->
+<div class="main main_fff clearfix">
+	<div class="location clearfix">
+		当前位置 : {$position}
+	</div>
+	<div class="list_p2_7 clearfix">
+		<div class="p2_7_left"><img src="__BASE__/images/p2_p_bg.jpg" alt=""><img src="__BASE__/images/zz_y.png" alt="" class="zzy"><img src="__BASE__/images/bfb.png" alt="" class="bfb"></div>
+		<div class="p2_7_right"><img src="__BASE__/images/p2_p_bgtit.jpg" alt="">
+			{$arctype['txt']}
+		</div>
+		<div class="p2_7_box">
+			{$arctype['txt2']}
+		</div>
+	</div>
+</div>
+
+
+<include file='wcs/Tpl/home/default/footer.html'/>
+
+</body>
+</html>

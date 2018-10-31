@@ -1,0 +1,32 @@
+<script>
+$(document).ready(function(event){
+      $('#menu-icon').click(function() {         
+    $('#nav').slideDown();
+      return false;
+    });
+
+  $("#nav").click(function(event) {
+    var e = event || window.event;  
+    if(e.stopPropagation) { //W3C阻止冒泡方法  
+          e.stopPropagation();  
+      } else {
+          e.cancelBubble = true; //IE阻止冒泡方法
+      }  
+  });
+  
+  $(document).click(function(event){
+  $("#nav").slideUp();
+  })
+
+  
+})
+</script>
+
+<nav id="nav-wrap">
+  <div id="menu-icon"><img src="__BASE__/wap/images/menu_bg.gif" width="40" height="33"> </div>
+  <ul id="nav">
+    <arctype typeid='48' orderway='asc' titlelen = '6' >
+     <li><a href="{$field['url']}">{$field['name']}</a></li>
+    </arctype>
+  </ul>
+</nav>

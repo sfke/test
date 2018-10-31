@@ -1,0 +1,27 @@
+<?php 
+  $route=explode("-",$arctype['route']);
+  $result = count($route); 
+  $count = $m->table(C('DB_PREFIX').'arctype')->where('fid='.$route[1])->order('id asc')->count();
+?>
+<?php if($result == 1){?> 
+ <div class="main_20 clearfix"></div>
+<?php }else{?>
+<div class="n_nav <if condition="$count lt 4">n_nav2</if> clearfix">
+ <arctype typeid="$route[1]" type="self" row="1">
+   <h4 style="background: url(__BASE__/images/p{$field['id']}_tit.jpg) no-repeat center center;">
+		<i>{$field['name']}</i>
+   </h4>
+ </arctype>  
+  <p>
+    <arctype typeid="$route[1]" row = '8' field="field2" >
+     <a href="{$field2['url']}" class="<?php if($index == 1 or $index == 4 or $index == 7){ echo lv ;}else if($index == 2 or $index == 5){ echo lan;}else{echo ju;} ?> <if condition="$arctype['id'] eq $field2['id']">n_nav_on</if>">
+      <img src="__BASE__/images/p{$field2['fid']}_{$field2['id']}.png" alt="" class="p4_img">
+      <img src="__BASE__/images/p{$field2['fid']}_{$field2['id']}_h.png" alt="" class="p4_img_h">
+      <i>{$field2['name']}</i>
+     </a> 
+    </arctype>
+  </p>
+</div>
+<?php } ?>
+
+ 

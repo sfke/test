@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>CMS</title>
+<link href="__CSS__/common.css" rel="stylesheet"/>
+<link href="__CSS__/right.css" rel="stylesheet"/>
+<link rel="stylesheet" href="__INC__/form/css/zebra_form.css" type="text/css">
+<script language="javascript"> var publicUrlInc = "__INC__"; </script>
+<script type="text/javascript" language="javascript" src="__JS__/jquery-1.7.2.min.js"></script>
+<script language="javascript" src="__INC__/wxld/wxld.js"></script>
+<script type="text/javascript" src="__JS__/common.js"></script>
+<script charset="utf-8" src="__INC__/kindeditor/kindeditor.js"></script>
+<link rel="stylesheet" href="__INC__/kindeditor/themes/default/default.css"/>
+<style type="text/css">
+    .one {
+        background: #fcfcfc;
+    }
+</style>
+</head>
+<body>
+<!--右侧区域 begin-->
+<div class="right">
+    <!--当前位置 begin-->
+    <include file='common:crumbs'/>
+    <!--当前位置 end-->
+    <!--主体区域 begin-->
+    <div class="container">
+        <div class="alert_div">
+            <h4 class="alert_info"><span class="welcome">{$welcome}</span>您现在的位置是：{$current} </h4>
+            <h4 class="alert_what" style="display:none;"></h4>
+        </div>
+        <!--样式三 begin-->
+        <div class="stats">
+            <div class="lm_title">
+                <div class="lm_title_l"><em>{$current}</em></div>
+            </div>
+            <div class="lm_content">
+                <form action="__GROUP__/extform/collectNodeSave" method="post">
+                    <input type="hidden" name="id" value="{$id|default=0}"></input>
+                    <table class="Zebra_Form" style="width:100%">
+                        <tr class="row">
+                            <td style="width:100px;"><label>采集项名称:</label></td>
+                            <td style="width:200px;"><input type="text" name="name" value="{$arr['name']}" class="text">
+                            </td>
+                            <td style="width:100px;"><label>目标网站编码:</label></td>
+                            <td>
+                                <select name="character" id="nodeCharacter">
+                                    <option value="gb2312" selected="selected">gb2312</option>
+                                    <option value="utf8">utf-8</option>
+                                </select>
+                            </td>
+                            <td><label>匹配模式:</label></td>
+                            <td>
+                                <select name="type" id="nodeType">
+                                    <option value="string" selected="selected">字符串</option>
+                                    <option value="preg">正则表达式</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr class="row even">
+                            <td><label>列表页URL:</label></td>
+                            <td colspan="3"><input type="text" name="listurl" class="control text" value="{$arr['listurl']}" style="width:90%"/></td>
+                            <td><label>超时秒数:</label></td>
+                            <td><input type="text" name="outtime" value="{$arr['outtime']}" class="text"></td>
+                        </tr>
+                        <tr class="row">
+                            <td><label>通配:</label></td>
+                            <td colspan="5">
+                                (*)从
+                                <input type="text" name="startid" id="startid" style="width:30px" value="{$arr['startid']|default='1'}">
+                                到
+                                <input type="text" name="endid" id="endid" style="width:30px" value="{$arr['endid']|default='20'}">
+                                (页码或规律数字)&nbsp;
+                                每页递增：
+                                <input type="text" name="addv" id="addv" style="width:30px" value="{$arr['addv']|default='1'}">
+                            </td>
+                        </tr>
+                        <tr class="row even">
+                            <td><label>手动指定:</label></td>
+                            <td colspan="3"><textarea name="listurlmore" style="height:160px;">{$arr['listurlmore']}</textarea></td>
+                            <td colspan="2">通配符格式为 (*) <br/> 如：http://www.jltech.com/html/list_(*).html <br/> 从 1 到 4
+                                可以匹配到：<br/> http://www.jltech.com/html/list_1.html <br/>
+                                http://www.jltech.com/html/list_2.html<br/> http://www.jltech.com/html/list_3.html<br/>
+                                http://www.jltech.com/html/list_4.html
+                            </td>
+                        </tr>
+                        <tr class="row">
+                            <td rowspan="2"><label>列表区域:</label></td>
+                            <td colspan="3"><label>区域开始HTML:&nbsp;&nbsp;&nbsp;</label><textarea name="lstart" style="height:60px;width:300px;">{$arr['lstart']}</textarea></td>
+                            <td><label>必须包含:</label></td>
+                            <td>
+                                <textarea name="listurly" style="width:200px;">{$arr['listurly']}</textarea>
+                            </td>
+                        </tr>
+                        <tr class="row">
+                            <td colspan="3"><label>区域结束HTML:&nbsp;&nbsp;&nbsp;</label><textarea name="lend" style="height:60px;width:300px;">{$arr['lend']}</textarea></td>
+                            <td><label>不许包含:</label></td>
+                            <td>
+                                <textarea name="listurln" style="width:200px;">{$arr['listurln']}</textarea>
+                            </td>
+                        </tr>
+                        <tr class="row even">
+                            <td><label>内容页URL:</label></td>
+                            <td colspan="5"><input type="text" name=curl class="control text" value="{$arr['curl']}" style="width:90%"/></td>
+                        </tr>
+                        <tr class="row">
+                            <td rowspan="2"><label>title采集:</label></td>
+                            <td colspan="2"><label>区域开始HTML:&nbsp;&nbsp;&nbsp;</label><textarea name="titlestart" style="height:60px;width:300px;">{$arr['titlestart']}</textarea></td>
+                            <td rowspan="2"><label>作者采集:</label></td>
+                            <td colspan="2"><label>区域开始HTML:</label><textarea name="authorstart" style="height:60px; width:300px;">{$arr['authorstart']}</textarea></td>
+                        </tr>
+                        <tr class="row">
+                            <td colspan="2"><label>区域结束HTML:&nbsp;&nbsp;&nbsp;</label><textarea name="titleend" style="height:60px;width:300px;">{$arr['titleend']}</textarea></td>
+                            <td colspan="2"><label>区域结束HTML:</label><textarea name="authorend" style="height:60px; width:300px;">{$arr['authorend']}</textarea></td>
+                        </tr>
+                        <tr class="row even">
+                            <td rowspan="2"><label>来源采集:</label></td>
+                            <td colspan="2"><label>区域开始HTML:&nbsp;&nbsp;&nbsp;</label><textarea name="sourcestart" style="height:60px;width:300px;">{$arr['sourcestart']}</textarea></td>
+                            <td rowspan="2"><label>时间采集:</label></td>
+                            <td colspan="2"><label>区域开始HTML:</label><textarea name="pubdatestart" style="height:60px; width:300px;">{$arr['pubdatestart']}</textarea></td>
+                        </tr>
+                        <tr class="row even">
+                            <td colspan="2"><label>区域结束HTML:&nbsp;&nbsp;&nbsp;</label><textarea name="sourceend" style="height:60px;width:300px;">{$arr['sourceend']}</textarea></td>
+                            <td colspan="2"><label>区域结束HTML:</label><textarea name="pubdateend" style="height:60px; width:300px;">{$arr['pubdateend']}</textarea></td>
+                        </tr>
+                        <tr class="row">
+                            <td rowspan="2"><label>正文采集:</label></td>
+                            <td colspan="2"><label>区域开始HTML:&nbsp;&nbsp;&nbsp;</label><textarea name="bodystart" style="height:60px;width:300px;">{$arr['bodystart']}</textarea></td>
+                            <td rowspan="2"><label>预留采集:</label></td>
+                            <td colspan="2"><label>区域开始HTML:</label><textarea name="morestart" style="height:60px;  width:300px;">{$arr['morestart']}</textarea></td>
+                        </tr>
+                        <tr class="row">
+                            <td colspan="2"><label>区域结束HTML:&nbsp;&nbsp;&nbsp;</label><textarea name="bodyend" style="height:60px;width:300px;">{$arr['bodyend']}</textarea></td>
+                            <td colspan="2"><label>区域结束HTML:</label><textarea name="moreend" style="height:60px;  width:300px;">{$arr['moreend']}</textarea></td>
+                        </tr>
+                        <tr class="row even">
+                            <td></td>
+                            <td></td>
+                            <td><input type="submit" class="button" value="保存"></input></td>
+                            <td><input type="reset" class="button" value="重置"></input></td>
+                            <td><!--input type="button" class="button" value="测试采集"></input--></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+            <div class="lm_bottom">
+                <div class="lm_bottom_l"><em></em></div>
+            </div>
+        </div>
+        <!--样式三 end-->
+    </div>
+    <!--主体区域 end-->
+</div>
+<!--右侧区域  end-->
+</body>
+<script>
+    var character = "{$arr['character']}";
+    var type = "{$arr['type']}";
+
+    function listUrlTest() {
+        alert(1);
+    }
+
+    $(function () {
+        $("#nodeCharacter option[value='" + character + "']").attr("selected", "true");
+        $("#nodeType option[value='" + type + "']").attr("selected", "true");
+    })
+</script>
+</html>

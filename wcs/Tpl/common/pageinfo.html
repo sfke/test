@@ -1,0 +1,51 @@
+<if condition="$pageinfo.total_page gt 1">
+    <div class="page">
+        <if condition="$pageinfo.first_suspen neq ''">
+            <a href="{$pageinfo.first_link}"><img src="__BASE__/images/page_first.jpg"/></a>
+        </if>
+        <if condition="$pageinfo.prev_link neq ''">
+            <a href="{$pageinfo.prev_link}"><img src="__BASE__/images/page_up.jpg"/></a>
+        </if>
+        <foreach name="pageinfo.page_links" key="page" item="link">
+            <if condition="$pageinfo.curr_page eq $page">
+                <a class="pcur">{$page}</a>
+            <else/>
+                <a href="{$link}">{$page}</a>
+            </if>
+        </foreach>
+        <if condition="$pageinfo.next_link neq ''">
+            <a href="{$pageinfo.next_link}"><img src="__BASE__/images/page_down.jpg"/></a>
+        </if>
+        <if condition="$pageinfo.last_suspen neq ''">
+            <a href="{$pageinfo.last_link}"><img src="__BASE__/images/page_last.jpg"/></a>
+        </if>
+        <span class="turnpage">
+           共{$pageinfo.total_page}页 到第<input id="temp" type="text" onkeydown="EnterPress();" class="turn"/>页<input type="text" class="yes" value="" onclick="gotopage()"/>
+        </span>
+    </div>
+</if>
+<script>
+    function EnterPress(e) {
+        var e = e || window.event;
+        if (e.keyCode == 13) {
+            gotopage();
+        }
+    }
+
+    function gotopage() {
+        var max = {$pageinfo.total_page};
+        var url = self.document.URL || self.location.href;
+        var index = document.getElementById("temp").value;
+        var flag = url.match(/p(\/)(\d)+/i);
+        if (flag !== null) {
+            var url = url.replace(/p(\/)(\d)+/i, 'p/' + index);
+        } else {
+            var url = url.replace(/.jsp/i, '/p/' + index + '.jsp');
+        }
+        if (index <= max && index >= 1) {
+            this.location = url;
+        } else {
+            alert('您输入的页码不存在!');
+        }
+    }
+</script>

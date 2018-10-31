@@ -1,0 +1,77 @@
+<form id="sortrankform" action="{:U('form/sortrankupdate')}" method="post">
+    <table cellpadding="0" cellspacing="0" width="100%" class="table_list">
+        <tr class="title" align="center">
+            <td>ID</td>
+            <td>选择</td>
+            <td align="left">内容标题</td>
+            <td>内容属性</td>
+            <td>内容模型</td>
+            <td>所属栏目</td>
+            <td>发布时间</td>
+            <td>状态</td>
+            <td>属性</td>
+            <td>权重</td>
+            <td>操作</td>
+        </tr>
+        <volist name='list' id='arcArr'>
+            <tr class="tr_line">
+                <td colspan="20">
+                    <div></div>
+                </td>
+            </tr>
+            <tr align="left">
+                <td>{$arcArr['id']}</td>
+                <td><input type="checkbox" name="_check[]" value="{$arcArr['id']}"></td>
+                <td align="left">{:msubstr($arcArr['title'],0,20)}</td>
+                <td>{:parseFlag($arcArr['flag'])}</td>
+                <td>{:getChannelName($arcArr['channel'])}</td>
+                <td>{:getArctypeName($arcArr['typeid'])}</td>
+                <td>{:date('Y-m-d',$arcArr['pubdate'])}</td>
+                <td>{:checkStatus($arcArr['status'])}</td>
+                <!-- <td>{$arcArr['addattr']}</td>-->
+                <td>
+				 <?php
+                  /*下面为模型显示（属性》科室），可对应修改成其它模型以及字段*/
+                  if($arcArr['channel']==9){ //9为 专家 模型
+                     $m = M();
+                     $addtable =  $m->table(C('DB_PREFIX').'channel')->where('id='.$arcArr['channel'])->getField("addtable");
+                     $model = M($addtable);
+                     $where["aid"] = array('eq' ,$arcArr['id']);
+                     $addattr = $model->where($where)->getField("keshi"); //此处调用模型的 keshi 字段，可自行修改
+				     echo "<font color='#FF0000'>".$addattr."</font>";
+				  }else{
+				     echo $arcArr['addattr'];
+				  } 
+                 ?>
+				</td>
+                <td><input type="text" class="text orderid" value="{$arcArr['sortrank']}" maxlength='3' style="width:20px;" name="{$arcArr['channel']}_{$arcArr['id']}"/></td>
+                <td width="140px">
+                    <?php if($display == 1 || $display == 3 ){  ?>
+                    <a href="http://{:C('currentSite.host')}:{:C('currentSite.port')}{:contentUrl($arcArr['id'],false,'home')}" target="_blank">预览</a> |
+                    <?php } ?>
+                    <?php
+                        if(Permission::check($arcArr['typeid'],"r")){
+                    ?>
+                    <a href="edit?aid={$arcArr['id']}&cid={$arcArr['channel']}&read=1">查看</a>
+                    <?php } ?>
+                    <?php
+                        if(Permission::check($arcArr['typeid'],"w")){
+                    ?>
+                    | <a href="edit?aid={$arcArr['id']}&cid={$arcArr['channel']}">修改</a>
+                    | <a href="javascript:openpanel('del',{$arcArr['id']})">删除</a>
+                    <?php
+                        if( in_array($arcArr['channel'],C('SYS_IMGUPLOAD_CHANNEL'))) {
+                    ?>
+                    <br/> <a href='imgupload?gid={$arcArr[id]}'><font color="#0000FF">{:getChannelName($arcArr['channel'])}传图</font></a>
+                    <?php }?>
+                    <?php
+                       if( in_array($arcArr['typeid'],C('SYS_IMGUPLOAD_EBOOK'))) {
+                    ?>
+                    | <a href='electronic?gid={$arcArr[id]}'><font color="#FF0000">生成期刊</font></a>
+                    <?php }?>
+                    <?php }?>
+                </td>
+            </tr>
+        </volist>
+    </table>
+</form>

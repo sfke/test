@@ -1,0 +1,16 @@
+<?php 
+  $route=explode("-",$arctype['route']);
+  $result = count($route);
+?>
+<div class="ny_ban">
+<?php if($result == 1){ ?> 
+   <arctype typeid="$arctype['id']" type="self" row="1">
+   <img src="{$field['litpic']|default=$defaultimg}">
+   </arctype>
+<?php }else { ?>
+   <arctype typeid="$route[1]" type="self" row="1">
+   <img src="{$field['litpic']|default=$defaultimg}">
+   </arctype>
+<?php } ?>
+</div>
+

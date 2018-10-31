@@ -1,0 +1,372 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>CMS</title>
+<link href="__CSS__/common.css" rel="stylesheet"/>
+<link href="__CSS__/right.css" rel="stylesheet"/>
+<link rel="stylesheet" href="__INC__/form/css/zebra_form.css" type="text/css">
+<script type="text/javascript" language="javascript" src="__JS__/jquery-1.7.2.min.js"></script>
+<link rel="stylesheet" href="__INC__/kindeditor/themes/default/default.css"/>
+<!--link rel="stylesheet" href="../kindeditor/plugins/code/prettify.css" /-->
+<script charset="utf-8" src="__INC__/kindeditor/kindeditor.js"></script>
+<script charset="utf-8" src="__INC__/kindeditor/lang/zh_CN.js"></script>
+<script charset="utf-8" src="__INC__/kindeditor/plugins/code/prettify.js"></script>
+<script type="text/javascript" src="__INC__/form/js/highlight.js"></script>
+<script type="text/javascript" src="__INC__/form/js/zebra_form.js"></script>
+<script type="text/javascript" src="__INC__/form/js/functions.js"></script>
+<script charset="utf-8" src="__JS__/common.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //When page loads...
+        $(".tab_content").hide(); //Hide all content
+        $("ul.tabs li:first").addClass("active").show(); //Activate first tab
+        $(".tab_content:first").show(); //Show first tab content
+        //On Click Event
+        $("ul.tabs li").click(function () {
+            $("ul.tabs li").removeClass("active"); //Remove any "active" class
+            $(this).addClass("active"); //Add "active" class to selected tab
+            $(".tab_content").hide(); //Hide all tab content
+            var activeTab = $(this).find("a").attr("href"); //Find the href attribute value to identify the active tab + content
+            $(activeTab).fadeIn(); //Fade in the active ID content
+            return false;
+        });
+    });
+</script>
+<!--圆角 兼容ie-->
+<!--[if IE]>
+<script type="text/JavaScript" src="js/curvycorners.src.js"></script>
+<script type="text/JavaScript">
+    curvyCorners.addEvent(window, 'load', initCorners);
+    function initCorners() {
+        var settings = {
+            tl: { radius: 2 },
+            tr: { radius: 2 },
+            //bl: { radius: 2 },
+            //br: { radius: 2 },
+            antiAlias: true
+        }
+        curvyCorners(settings, ".tabs");
+    }
+</script>
+<![endif]-->
+<style type="text/css">
+    .one {
+        background: #fcfcfc;
+    }
+</style>
+</head>
+<body>
+<!--右侧区域 begin-->
+<div class="right">
+<!--当前位置 begin-->
+<include file='common:crumbs'/>
+<!--当前位置 end-->
+<!--主体区域 begin-->
+<div class="container">
+    <div class="alert_div">
+        <h4 class="alert_info">您现在的位置是：{$current} <span class="welcome">{$welcome}</span></h4>
+        <h4 class="alert_what" style="display:none;"></h4>
+    </div>
+    <!--样式一 begin-->
+    <div class="stats">
+        <div class="lm_title">
+            <div class="lm_title_l"><em>
+                <ul class="tabs">
+                    <li><a href="#tab1">基本信息</a></li>
+                    <li style="padding:0;margin:0;color:#CCC;height:24px;line-height:24px;width:1px;border-left:1px solid #CCC;"></li>
+                    <li><a href="#tab2">商品属性</a></li>
+                    <li><a href="#tab3">相册</a></li>
+                    <li><a href="#tab4">配件</a></li>
+                </ul>{$current}</em>
+            </div>
+        </div>
+        <div class="lm_content">
+            <div class="tab_container">
+                <div id="tab1" class="tab_content">{$form_html}</div>
+                <div id="tab2" class="tab_content">
+                    <form name="attrForm" id="attrForm" action="{:U('shopform/goodsattradd')}" method="post" class="Zebra_Form" onsubmit="return checkSub();">
+                        <input type="hidden" name="gid" id="gid" value={$gid}></input>
+                        <table class="Zebra_Form" width="100%">
+                            <tbody>
+                            <tr class="row">
+                                <td width="200px;"><label>商品种类:</label></td>
+                                <td>
+                                    <select class="control select" id="goodstype" onchange="showAttribute(this)">
+                                        <option value="0"> - 请选择 -</option>
+                                        {$select_html}
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr class="row even last attributes">
+                                <td></td>
+                                <td colspan="2" valign="top">
+                                    <input style="float:left;" type="submit" name="btnsubmit" id="btnsubmit" value="确定" class="submit" />
+                                    <input type="reset" name="my_reset" id="my_reset" value="重置" class="reset" style="float:left;margin-left:100px;" />
+                                    <div style="clear:both;"></div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+                <div id="tab3" class="tab_content">
+                    <script>
+                        function removeImg(obj) {
+                            $(obj).parent().parent().fadeOut(600, function () {
+                                $(obj).parent().parent().remove();
+                            });
+                        }
+
+                        KindEditor.ready(function (K) {
+                            var imagesUpload = K.editor({
+                                allowFileManager: true
+                            });
+                            K('#jl_selectImage').click(function () {
+                                imagesUpload.loadPlugin('multiimage', function () {
+                                    imagesUpload.plugin.multiImageDialog({
+                                        clickFn: function (urlList) {
+                                            var div = K('#jl_imageView');
+                                            //div.html('');
+                                            var j = 1;
+                                            K.each(urlList, function (i, url) {
+                                                //div.append('<img src="' + url['url'] + '">');
+                                                if (j % 2 == 0) var flag = "even";
+                                                else var flag = "";
+                                                var tempHtml = $('<tr class="row ' + flag + '"><td><img style="border:1px solid #1A1A1A"  src="' + url['url'] + '" width="80px" /></td><td><label>标题：</label></td><td><input type="hidden" name="images[]" value="' + url['url'] + '" ></input><input type="text" class="control text" name="intro[]" value="" ></input></td><td><input type="button" class="control button"  value="移除" onclick="removeImg(this);" ></td></tr>');
+                                                tempHtml.insertBefore($(".last_img"));
+                                                j++;
+                                            });
+                                            imagesUpload.hideDialog();
+                                        }
+                                    });
+                                });
+                            });
+                        });
+                    </script>
+                    <form name="imgUploadForm" id="imgUploadForm" action="{:U('shopform/goodsimagesadd')}" method="post" class="Zebra_Form" onsubmit="return checkSub();">
+                        <input type="hidden" name="gid" id="gid" value={$gid}></input>
+                        <table class="Zebra_Form" width="100%" id="jl_imageView">
+                            <tbody>
+                            <tr class="row">
+                                <td width="100px;"><label>批量上传:</label></td>
+                                <td width="30px;">
+                                    <input type="button" class="control button" id="jl_selectImage" value="浏览"/>
+                                </td>
+                                <td width="250px;"></td>
+                                <td></td>
+                            </tr>
+                            {$goodsImgHtml}
+                            <tr class="row even last_img">
+                                <td></td>
+                                <td colspan="3" valign="top">
+                                    <input style="float:left;" type="submit" name="btnsubmit" id="btnsubmit" value="确定" class="submit" />
+                                    <input type="reset" name="my_reset" id="my_reset" value="重置" class="reset" style="float:left;margin-left:100px;" />
+                                    <div style="clear:both;"></div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+                <!-- 商品配件 -->
+                <div id="tab4" class="tab_content">
+                    <style>
+                        #sltSrc {
+                            height: 400px;
+                            width: 300px;
+                        }
+                        #sltTarget {
+                            height: 400px;
+                            width: 300px;
+                        }
+                        .goodsSelection {
+                            width: 620px;
+                            margin: 0 auto;
+                        }
+                    </style>
+                    <div class="goodsSelection">
+                        <table class="Zebra_Form" width="100%">
+                            <tr class="row">
+                                <td>
+                                    <label>可选商品:</label>
+                                    <select class="categorySelection" onchange="getGoodsBySelection()">{$categoryHtml}</select>
+                                </td>
+                                <td>&nbsp;</td>
+                                <td><label>商品配件:</label></td>
+                            </tr>
+                            <tr class="row even">
+                                <td>
+                                    <select ondblclick="removeItem();" id="sltSrc" multiple="true">
+                                    </select>
+                                </td>
+                                <td>
+                                    <span>>></span>
+                                </td>
+                                <td>
+                                    <select ondblclick="addItem();" id="sltTarget" multiple="true">
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr class="row">
+                                <td>
+                                    <div id="showInfo"></div>
+                                </td>
+                                <td>&nbsp;</td>
+                                <td><input type="button" class="button" value="保存商品配件信息" onclick="showSelectOptions();"/></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="lm_bottom">
+            <div class="lm_bottom_l"><em></em></div>
+        </div>
+    </div>
+    <!--样式一 end-->
+</div>
+<!--主体区域 end-->
+</div>
+<!--右侧区域  end-->
+</body>
+<script>
+    var attr_html = '';
+    function showAttribute(obj) {
+        var gtid = obj.value;
+        var action = '{$action}';
+        var gid = '{$gid}';
+        $.post("__GROUP__/shopajax/getattribute", {gtid: gtid, action: action, gid: gid}, function (data) {
+            if (data == -1) {
+                jl_notify(2, "获取属性列表失败！");
+            } else {
+                if (attr_html != '') {
+                    attr_html.remove();
+                }
+                attr_html = $(data);
+                attr_html.insertBefore($(".attributes"));
+            }
+        });
+    }
+
+    function checkSub() {
+        var gid = $("#gid").val();
+        if (gid == '') {
+            jl_notify(2, "请先保存商品基本信息！");
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    //配件相关start
+    function removeItem() {
+        var sltSrc = document.getElementById('sltSrc');
+        var sltTarget = document.getElementById('sltTarget');
+        for (var i = 0; i < sltSrc.options.length; i++) {
+            var tempOption = sltSrc.options[i];
+            if (tempOption.selected) {
+                sltSrc.removeChild(tempOption);
+                sltTarget.appendChild(tempOption);
+            }
+        }
+    }
+
+    function addItem() {
+        var sltSrc = document.getElementById('sltSrc');
+        var sltTarget = document.getElementById('sltTarget');
+        for (var i = 0; i < sltTarget.options.length; i++) {
+            var tempOption = sltTarget.options[i];
+            if (tempOption.selected) {
+                sltTarget.removeChild(tempOption);
+                sltSrc.appendChild(tempOption);
+            }
+        }
+    }
+
+    function showSelectOptions() {
+        var sltTarget = document.getElementById('sltTarget');
+        var myhtml = "";
+        var selectedGoodsArr = new Array();
+        var selectedGoodsStr = '';
+        for (var i = 0; i < sltTarget.options.length; i++) {
+            selectedGoodsArr[sltTarget.options[i].value] = sltTarget.options[i].text;
+            //myhtml +="Select Item" + i + ":  text= " + sltTarget.options[i].text + ", value=" + sltTarget.options[i].value + "<br/>";
+        }
+        var j = 0;
+        for (var i in selectedGoodsArr) {
+            if (j > 0 && j < selectedGoodsArr.length) selectedGoodsStr += ',';
+            selectedGoodsStr += i;
+            j++;
+        }
+        //document.getElementById("showInfo").innerHTML=myhtml;
+        var gid = $("#gid").val();
+        if (gid == '') {
+            jl_notify(2, "请先保存商品基本信息！");
+            return false;
+        } else {
+            $.post("__GROUP__/shopajax/goodsAccessoriesSave", {gid: gid, items: selectedGoodsStr}, function (data) {
+                if (data == -1) {
+                    jl_notify(3, "商品配件没有任何改动！");
+                } else {
+                    jl_notify(1, "保存商品配件成功！");
+                }
+            });
+        }
+    }
+
+    function getGoodsBySelection() {
+        var catid = $(".categorySelection").val();
+        $.post("__GROUP__/shopajax/getGoodsBySelection", {catid: catid}, function (data) {
+            if (data == -1) {
+                jl_notify(3, "该类别下没有任何商品！");
+            } else {
+                $("#sltSrc").html(data);
+            }
+        });
+    }
+
+    //配件相关end
+    //在该处添加产品类别属性
+    function addattrbtn($attrid) {
+        var attrid = $attrid;
+        var attrv = $.trim($(".addattr_" + attrid).val());
+        if (attrv == "" || attrv == null) {
+            jl_notify(2, "新添加的选项不能为空！");
+        }
+        $.post("__GROUP__/shopajax/goodsattradd", {id: attrid, value: attrv}, function (data) {
+            if (data == -1) {
+                jl_notify(2, "添加属性选项失败！");
+                return;
+            } else if (data == -2) {
+                jl_notify(2, "改属性已经存在！");
+                return;
+            } else {
+                $("select[name='attr_" + attrid + "']").append(data);
+                jl_notify(1, "添加属性选项成功！");
+                $(".addattr_" + attrid).val('')
+                return;
+            }
+        });
+    }
+
+    $(function () {
+        var gtid = '{$d_gtid}';
+        if (gtid != '' && typeof(gtid) != 'undefined') {
+            var action = 'edit';
+            var gid = '{$gid}';
+            $.post("__GROUP__/shopajax/getattribute", {gtid: gtid, action: action, gid: gid}, function (data) {
+                if (data == -1) {
+                    jl_notify(2, "获取属性列表失败！");
+                } else {
+                    if (attr_html != '') {
+                        attr_html.remove();
+                    }
+                    attr_html = $(data);
+                    attr_html.insertBefore($(".attributes"));
+                }
+            });
+        }
+    });
+</script>
+</html>

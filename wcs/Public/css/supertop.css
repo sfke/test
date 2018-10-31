@@ -1,0 +1,23 @@
+@charset "utf-8";
+/*top区域*/
+.top {
+    height: 55px;
+    background: url(../images/header_bg.png) repeat-x #222222
+}
+
+.top h1, .top h2 {
+    color: #FFFFFF;
+    display: block;
+    float: left;
+    font-size: 22px;
+    font-weight: normal;
+    height: 55px;
+    line-height: 55px;
+    text-align: center;
+    width: 315px;
+}
+
+.top h2 {
+    background: url(../images/header_shadow.png) no-repeat left top;
+    text-align: center;
+}

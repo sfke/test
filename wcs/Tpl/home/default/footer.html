@@ -1,0 +1,202 @@
+<footer class="clearfix2">
+
+	<div class="footer wow fadeInUp clearfix">
+
+		<div class="foot_left">
+
+			<div id="outer">
+
+			    <div id="content">
+
+			        <div style="display:block;">
+
+						<img src="__BASE__/images/ewm1.png" alt="">
+
+			        </div>
+
+			        <div>
+
+						<img src="__BASE__/images/ewm1.png" alt="">
+
+			        </div>
+
+			        <div>
+
+						<img src="__BASE__/images/ewm3.png" alt="">
+
+			        </div>
+
+			    </div>
+
+			    <ul id="tab">
+
+			        <li class="current"><img src="__BASE__/images/wb_icon.jpg" alt=""></li>
+
+			        <li><img src="__BASE__/images/wx_icon.jpg" alt=""></li>
+
+			        <li><img src="__BASE__/images/wap_icon.jpg" alt=""></li>
+
+			    </ul>
+
+		        </div>
+
+
+
+		</div>
+
+<script>
+
+	$(function(){
+
+		window.onload = function()
+
+		{
+
+			var $li = $('#tab li');
+
+			var $ul = $('#content > div');
+
+						
+
+			$li.mouseover(function(){
+
+				var $this = $(this);
+
+				var $t = $this.index();
+
+				$li.removeClass();
+
+				$this.addClass('current');
+
+				$ul.css('display','none');
+
+				$ul.eq($t).css('display','block');
+
+			})
+
+		}
+
+	});
+
+
+
+</script>
+
+<!-- 二维码 -->
+
+	<div class="foot_right">
+
+		<div class="rigtht">
+
+
+			<ul>
+
+			<li><a href="{:listUrl(1)}">关于我们</a></li>
+
+			<li><a href="{:listUrl(41)}">招贤纳士</a></li>
+
+			<li><a href="http://www.neeq.com.cn/disclosure/announcement.html?companyCode=831331" target="_blank">投资关系</a></li>
+
+			<li><a href="{:listUrl(9)}">服务与支持</a></li>
+
+                        <li><a href="{:listUrl(37)}">法律声明</a></li>
+
+			<li>
+
+                        <select name="" id=""  onchange="window.open(this.value)">
+
+                          <option value="#">————友情链接————</option>
+
+                          <flink typeid="1" titlelen="12" > 
+
+                             <option value="{$field['url']}">{$field['title']}</option>
+
+                          </flink>
+
+                        </select>
+
+                       </li> 
+
+		     </ul>
+
+		</div>
+
+		<div class="rightb">
+
+			<p>电话：{:C('JL_DIANHUA')}  </p>
+
+			<p>售后电话：{:C('JL_TEL')}</p>
+
+			<p>邮箱：{:C('JL_EMAIL')}</p>
+
+			<p>地址：{:C('JL_DIZHI')}</p>
+			
+			<p>网址：<a href="http://huaaotech.com/index.php">www.huaaotech.com</a></p>
+		</div>
+
+	</div>
+
+     </div>
+
+</footer>
+
+<div class="copy_box clearfix">
+
+	<div class="copyright clearfix">
+
+		<div class="copy_left">{:C('JL_COPYRIGHT')} <a href="http://www.miitbeian.gov.cn" target="_blank">{:C('JL_BEIAN')}</a></div>
+
+		<div class="copy_right">
+
+			<!-- <div class="share bshare-custom">
+
+	          <a title="QQ" class="share-ico share-qqim bshare-qqim"></a>
+
+	          <a title="WeChat" class="share-ico share-weixin bshare-weixin"></a>
+
+	          <a title="sina" class="share-ico share-sinaminiblog bshare-sinaminiblog"></a>
+
+	        </div>
+
+			<span>一键分享：</span> -->
+
+
+
+			<a href="http://www.jltech.cn" target="_blank">技术支持：京伦科技</a></div>
+
+	</div>
+
+</div>
+
+
+
+<!-- JiaThis Button BEGIN -->
+
+<script type="text/javascript" >
+
+var jiathis_config={
+
+	siteNum:6,
+
+	sm:"tsina,weixin,cqq,qzone,douban,email",
+
+	summary:"",
+
+	boldNum:3,
+
+	marginTop:400,
+
+	showClose:true,
+
+	shortUrl:false,
+
+	hideMore:true
+
+}
+
+</script>
+
+<script type="text/javascript" src="http://v3.jiathis.com/code/jiathis_r.js?btn=r5.gif&move=1" charset="utf-8"></script>
+
+<!-- JiaThis Button END -->
+<span id="to_top"><img src="__BASE__/images/to_top.png" alt=""></span>

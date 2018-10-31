@@ -1,0 +1,466 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>munu</title>
+<link href="__CSS__/common.css" rel="stylesheet"/>
+<link href="__CSS__/superleft.css" rel="stylesheet"/>
+<link rel="stylesheet" href="__CSS__/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="__JS__/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="__JS__/jquery.ztree.all-3.3.min.js"></script>
+<script type="text/javascript">
+    function g(o) {
+        return document.getElementById(o);
+    }
+    function HoverLi(n) {
+        for (var i = 1; i <= 8; i++) {
+            g('tb_' + i).className = 'tab_normaltab';
+            g('tbc_0' + i).className = 'menu_undis';
+        }
+        g('tbc_0' + n).className = 'menu_dis';
+        g('tb_' + n).className = 'tab_hovertab';
+    }
+</script>
+<script type="text/javascript">
+    function alt() {
+        var height = document.documentElement.clientHeight - 60 + "px";
+        document.getElementById("n_zone_height").style.height = height;
+    }
+</script>
+<script>
+    //点击回调函数 1:arctype
+    function treeOnClick(event, treeId, treeNode) {
+        if (treeNode.isParent == false) {
+            //window.content.location.href="{:U('arctype/edit')}?tid="+treeNode.id+"&cid="+treeNode.cid;
+            window.parent.frames["content"].document.location.href = "{:U('arctype/edit')}?tid=" + treeNode.id + "&cid=" + treeNode.cid;
+        } else {
+            //window.content.location.href="{:U('arctype/show')}?tid="+treeNode.id+"&cid="+treeNode.cid;
+            window.parent.frames["content"].document.location.href = "{:U('arctype/show')}?tid=" + treeNode.id + "&cid=" + treeNode.cid;
+        }
+    }
+
+    function treeBeforeClick(treeId, treeNode, clickFlag) {
+        return true;
+    }
+
+    //点击回调函数 2:content
+    function treeOnClick2(event, treeId, treeNode) {
+        window.parent.frames["content"].document.location.href = "{:U('content/show')}?tid=" + treeNode.id + "&cid=" + treeNode.cid;
+    }
+
+    function treeBeforeClick2(treeId, treeNode, clickFlag) {
+        return true;
+    }
+
+    //展开节点
+    function expandNode(e) {
+        var objid = e.data.objid;
+        var zTree = $.fn.zTree.getZTreeObj(objid),
+                type = e.data.type,
+                nodes = zTree.getSelectedNodes();
+        if (type.indexOf("All") < 0 && nodes.length == 0) {
+            alert("请先选择一个父节点");
+        }
+        if (type == "expandAll") {
+            zTree.expandAll(true);
+        } else if (type == "collapseAll") {
+            zTree.expandAll(false);
+        } else {
+            var callbackFlag = $("#callbackTrigger").attr("checked");
+            for (var i = 0, l = nodes.length; i < l; i++) {
+                zTree.setting.view.fontCss = {};
+                if (type == "expand") {
+                    zTree.expandNode(nodes[i], true, null, null, callbackFlag);
+                } else if (type == "collapse") {
+                    zTree.expandNode(nodes[i], false, null, null, callbackFlag);
+                } else if (type == "toggle") {
+                    zTree.expandNode(nodes[i], null, null, null, callbackFlag);
+                } else if (type == "expandSon") {
+                    zTree.expandNode(nodes[i], true, true, null, callbackFlag);
+                } else if (type == "collapseSon") {
+                    zTree.expandNode(nodes[i], false, true, null, callbackFlag);
+                }
+            }
+        }
+    }
+
+    $(function () {
+        var setting = {
+            data: {
+                simpleData: {enable: true}
+            },
+            callback: {
+                onClick: treeOnClick,
+                beforeClick: treeBeforeClick
+            }
+        };
+
+        var setting2 = {
+            data: {
+                simpleData: {enable: true}
+            },
+            callback: {
+                onClick: treeOnClick2,
+                beforeClick: treeBeforeClick2
+            }
+        };
+
+        $.post("{:U('ajax/ajaxZtree')}", {}, function (data) {
+            //	alert(data[0]);
+            if (data !== null) {
+                var arctypetreeObj = $.fn.zTree.init($("#arctypetree"), setting, data);
+                var contenttreeObj = $.fn.zTree.init($("#contenttree"), setting2, data);
+                arctypetreeObj.expandAll(true);
+                contenttreeObj.expandAll(true);
+            }
+        }, 'json');
+
+        $("#expandAllBtn").bind("click", {type: "expandAll", objid: 'arctypetree'}, expandNode);
+        $("#collapseAllBtn").bind("click", {type: "collapseAll", objid: 'arctypetree'}, expandNode);
+        $("#expandAllBtn2").bind("click", {type: "expandAll", objid: 'contenttree'}, expandNode);
+        $("#collapseAllBtn2").bind("click", {type: "collapseAll", objid: 'contenttree'}, expandNode);
+
+        //默认以选中的tab
+        navid = {$navid};
+        if (typeof(navid) == 'undefined') {
+            navid = 1;
+        }
+        $("#tbc_0" + navid).removeClass('menu_undis').addClass('menu_dis');
+        $("#tb_" + navid).attr('class', 'tab_hovertab');
+    });
+</script>
+<style type="text/css">
+    .treeControl {
+        margin-top: 20px;
+        margin-left: 30px;
+    }
+
+    .treeControl li a {
+        margin-left: 20px;
+    }
+
+    .nav {
+        border: 1px solid #c2c2c2;
+        background: #e4e4e4;
+        -moz-border-radius: 10px;
+        -webkit-border-radius: 10px;
+        border-radius: 10px;
+        -moz-box-shadow: 5px 5px 8px #bababc;
+        -webkit-box-shadow: 5px 5px 8px #bababc;
+        box-shadow: 5px 5px 8px #bababc;
+    }
+
+    .nav h3 {
+        -moz-text-shadow: 1px 1px 1px #fff;
+        -webkit-text-shadow: 1px 1px 1px #fff;
+        text-shadow: 1px 1px 1px #fff;
+    }
+</style>
+
+<!--[if IE]>
+<style type="text/css">
+    .nav {
+        border: 1px solid #c2c2c2;
+        background: #e4e4e4;
+        -moz-border-radius: 10px;
+        -webkit-border-radius: 10px;
+        border-radius: 10px;
+        -moz-box-shadow: 0 0 0 #bababc;
+        -webkit-box-shadow: 0 0 0 #bababc;
+        box-shadow: 0 0 0 #bababc;
+        behavior: url(__CSS__/ie-css3.htc);
+    }
+</style>
+<![endif]-->
+
+<script>
+    function switchSite(sid) {
+
+        if (confirm("你确定要切换站点？")) {
+            parent.location.href = "{:U('index/changesite')}?sid=" + sid;
+        } else {
+            location.href = location.href;
+        }
+    }
+</script>
+
+</head>
+<body style="background:#E0E0E3 url(__IMG__/left_bg.jpg) repeat-y right;" onload="alt();">
+<!--左侧区域 begin-->
+<div class="left">
+    <div class="fix">
+        <div class="user">
+            <p><span style="color:#5BBED2;">{$username}</span>&nbsp;（{$userid}）
+                <?php if( is_array($siteArr) && count($siteArr) >1 ){ ?>
+                <select name="siteid" style="width:80px;" onchange="switchSite(this.value)">
+                    <volist name="siteArr" id="vo">
+                        <option value="{$vo['id']}"
+                        <eq name="vo['id']" value="$Think.session.currentSiteId"> selected</eq>
+                        >{$vo['name']}</option>
+                    </volist>
+                </select>
+                <?php } else { echo  "站点：".$siteArr[0]['name']; } ?>
+            </p>
+            <!-- <a class="logout_user" href="#" title="Logout">注销</a> -->
+        </div>
+        <div class="clearline"></div>
+    </div>
+    <!--导航菜单 begin-->
+    <div class="nav_zone" id="n_zone_height">
+        <!--切换title begin-->
+        <div class="tab_nav">
+            <ul>
+                <li id="tb_1" class="tab_normaltab" onclick="a:HoverLi(1);"><a href="#" onmouseover="this.className='a_m_hovertab'" onmouseout="this.className=''">配置</a></li>
+                <li id="tb_2" class="tab_normaltab" onclick="a:HoverLi(2);"><a href="#" onmouseover="this.className='a_m_hovertab'" onmouseout="this.className=''">栏目</a></li>
+                <li id="tb_3" class="tab_normaltab" onclick="a:HoverLi(3);"><a href="#" onmouseover="this.className='a_m_hovertab'" onmouseout="this.className=''">内容</a></li>
+                <li id="tb_7" class="tab_normaltab" onclick="a:HoverLi(7);"><a href="#" onmouseover="this.className='a_m_hovertab'" onmouseout="this.className=''">商城</a></li>
+                <li id="tb_8" class="tab_normaltab" onclick="a:HoverLi(8);"><a href="#" onmouseover="this.className='a_m_hovertab'" onmouseout="this.className=''">用户</a></li>
+                <li id="tb_4" class="tab_normaltab" onclick="a:HoverLi(4);"><a href="#" onmouseover="this.className='a_m_hovertab'" onmouseout="this.className=''">功能</a></li>
+                <li id="tb_5" class="tab_normaltab" onclick="a:HoverLi(5);"><a href="#" onmouseover="this.className='a_m_hovertab'" onmouseout="this.className=''">开发</a></li>
+                <li id="tb_6" class="tab_normaltab" onclick="a:HoverLi(6);"><a href="#" onmouseover="this.className='a_m_hovertab'" onmouseout="this.className=''">扩展</a></li>
+            </ul>
+        </div>
+        <!--切换title end-->
+        <!--切换内容 begin-->
+        <div class="nav">
+            <div class="tab">
+                <div class="menu_undis" id="tbc_01">
+                    <div class="nav_middle">
+                        <h3>欢迎页 </h3>
+                        <ul class="toggle">
+                            <li class="icn_new_article"><a href="__GROUP__/index/welcome" target="content">欢迎</a></li>
+                            <li class="icn_edit_article"><a href="__GROUP__/index/serverInfo" target="content">服务器配置</a></li>
+                            <li class="icn_edit_article"><a href="__GROUP__/html/cache" target="content">系统缓存清理</a></li>
+                            <li class="icn_edit_article"><a href="__GROUP__/content/nocheck" target="content">未审核内容列表</a></li>
+                        </ul>
+                        <h3>站点管理 </h3>
+                        <ul class="toggle">
+                            <li class="icn_add_user"><a href="__GROUP__/sites/show" target="content">站点管理</a></li>
+                        </ul>
+                        <h3>参数设置 </h3>
+                        <ul class="toggle">
+                            <volist name="configType" id="configtype">
+                                <li class="icn_edit_article"><a href="__GROUP__/sys/setConfig?groupid={$configtype['id']}" target="content">{$configtype['typename']}</a></li>
+                            </volist>
+                            <li class="icn_jump_back"><a href="__GROUP__/sys/configType" target="content">系统参数类别管理</a></li>
+                            <li class="icn_jump_back"><a href="__GROUP__/sys/superConfig" target="content">系统参数高级管理</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="menu_undis" id="tbc_07">
+                    <div class="nav_middle">
+                        <h3>商品管理</h3>
+                        <ul class="toggle">
+                            <li class="icn_edit_article"><a href="__GROUP__/category/show" target="content">商品栏目</a></li>
+                            <li class="icn_new_article"><a href="__GROUP__/goods/show" target="content">所有商品列表</a></li>
+                            <li class="icn_edit_article"><a href="__GROUP__/goodstype/show" target="content">商品种类属性</a></li>
+                        </ul>
+                        <h3>订单管理</h3>
+                        <ul class="toggle">
+                            <li class="icn_edit_article"><a href="__GROUP__/order/show" target="content">所有交易订单</a></li>
+                            <li class="icn_edit_article"><a href="__GROUP__/order/show?os=1" target="content">进行中的交易</a></li>
+                            <li class="icn_edit_article"><a href="__GROUP__/order/show?os=3" target="content">已完成的交易</a></li>
+                            <li class="icn_edit_article"><a href="__GROUP__/order/show?os=2" target="content">关闭的交易</a></li>
+                        </ul>
+                        <h3>其他管理</h3>
+                        <ul class="toggle">
+                            <li class="icn_edit_article"><a href="__GROUP__/shipping/show" target="content">运费管理</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="menu_undis" id="tbc_08">
+                    <div class="nav_middle">
+                        <h3>会员管理 </h3>
+                        <ul class="toggle">
+                            <li class="icn_new_article"><a href="__GROUP__/member/show?type=1" target="content">个人会员管理</a></li>
+                            <li class="icn_new_article"><a href="__GROUP__/member/show?type=2" target="content">企业会员管理</a></li>
+                            <li class="icn_new_article"><a href="__GROUP__/member/resetpwd" target="content">会员密码重置</a></li>
+                        </ul>
+                        <h3>会员文章管理 </h3>
+                        <ul class="toggle">
+                            <li class="icn_new_article"><a href="__GROUP__/member/articleShow?status=1" target="content">待审核文章列表</a></li>
+                            <li class="icn_new_article"><a href="__GROUP__/member/articleShow?status=2" target="content">已审核文章列表</a></li>
+                            <li class="icn_new_article"><a href="__GROUP__/member/articleShow" target="content">所有文章列表</a></li>
+                        </ul>
+                        <h3>评论管理（会员文章）</h3>
+                        <ul class="toggle">
+                            <li class="icn_new_article"><a href="__GROUP__/member/feedbackShow?status=1" target="content">待审核评论列表</a></li>
+                            <li class="icn_new_article"><a href="__GROUP__/member/feedbackShow?status=2" target="content">已审核评论列表</a></li>
+                            <li class="icn_new_article"><a href="__GROUP__/member/feedbackShow" target="content">所有评论列表</a></li>
+                        </ul>
+                        <h3>评论管理（网站文章） </h3>
+                        <ul class="toggle">
+                            <li class="icn_new_article"><a href="__GROUP__/content/feedbackshow?status=1" target="content">待审核新闻评论</a></li>
+                            <li class="icn_new_article"><a href="__GROUP__/content/feedbackshow?status=2" target="content">已审核新闻评论</a></li>
+                            <li class="icn_new_article"><a href="__GROUP__/content/feedbackshow" target="content">所有新闻评论</a></li>
+                        </ul>
+                        <h3>网站管理员 </h3>
+                        <ul class="toggle">
+                            <li class="icn_add_user"><a href="__GROUP__/user/show" target="content">用户管理</a></li>
+                            <li class="icn_view_users"><a href="__GROUP__/role/show" target="content">用户组管理</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="menu_undis" id="tbc_02">
+                    <div class="nav_middle">
+                        <h3>
+                            <span>
+                                <a href="__GROUP__/arctype/show?tid=0&cid=-1" target="content" title="根">根</a>
+                                <a id="collapseAllBtn" href="#" title="收起" onclick="return false;">收起</a>
+                                <a id="expandAllBtn" href="#" title="展开" onclick="return false;">展开</a>
+                                <a href="?navid=2" title="刷新">刷新</a>
+                            </span>栏目管理
+                        </h3>
+                        <!--<ul class="treeControl">
+                               <li><a  href="__GROUP__/arctype/show?tid=0&cid=-1"  title="根" target="content"><img src="__IMG__/4.png" height="26px" /></a>
+                                   <a id="collapseAllBtn" href="#" title="收起" onclick="return false;"><img src="__IMG__/3.png" height="26px" /></a>
+                                  <a id="expandAllBtn" href="#" title="展开" onclick="return false;"><img src="__IMG__/2.png" height="26px" /></a>
+                                   <a href="?navid=2" title="刷新" ><img src="__IMG__/1.png" height="26px" /></a>
+                               </li>
+                       </ul>-->
+                        <ul id="arctypetree" class="ztree toggle"></ul>
+                    </div>
+                </div>
+                <div class="menu_undis" id="tbc_03">
+                    <div class="nav_middle">
+                        <h3>
+                            <span>
+                                <a id="collapseAllBtn2" href="#" title="收起" onclick="return false;">收起</a>
+                                <a id="expandAllBtn2" href="#" title="展开" onclick="return false;">展开</a>
+                                <a href="?navid=3" title="刷新">刷新</a>
+                            </span>内容管理
+                        </h3>
+                        <!--<ul class="treeControl">
+                             <li>
+                                  <a id="collapseAllBtn2" href="#" title="收起" onclick="return false;"><img src="__IMG__/3.png" height="26px" /></a>
+                                  <a id="expandAllBtn2" href="#" title="展开" onclick="return false;"><img src="__IMG__/2.png" height="26px" /></a>
+                                  <a href="?navid=3" title="刷新"><img src="__IMG__/1.png" height="26px" /></a>
+                             </li>
+                     </ul>-->
+                        <ul id="contenttree" class="ztree toggle"></ul>
+                    </div>
+                </div>
+                <div class="menu_undis" id="tbc_04">
+                    <div class="nav_middle">
+                       
+                        <h3>医患交流 </h3>
+                        <ul class="toggle">
+                            <li class="icn_categories"><a href="__GROUP__/faq/show" target="content">医患交流列表</a></li>
+                        </ul>
+                        <h3>留言管理 </h3>
+                        <ul class="toggle">
+                            <li class="icn_categories"><a href="__GROUP__/msg/show" target="content">留言列表</a></li>
+                        </ul>
+                        <h3>无限联动 </h3>
+                        <ul class="toggle">
+                            <li class="icn_edit_article"><a href="__GROUP__/wxld/show" target="content">无限联动管理</a></li>
+                            <li class="icn_categories"><a href="__GROUP__/wxld/setorder" target="content">无限联动排序</a></li>
+                        </ul>
+                        <h3>回收站管理 </h3>
+                        <ul class="toggle">
+                            <li class="icn_folder"><a href="__GROUP__/arctype/recycle" target="content">栏目回收站</a></li>
+                            <li class="icn_folder"><a href="__GROUP__/content/recycle" target="content">内容回收站</a></li>
+                        </ul>
+                        <h3>采集管理</h3>
+                        <ul class="toggle">
+                            <li class="icn_edit_article"><a href="__GROUP__/collect/show" target="content">采集项管理</a></li>
+                            <li class="icn_edit_article"><a href="__GROUP__/collect/cache" target="content">采集临时库</a></li>
+                        </ul>
+                        <h3>统计功能 </h3>
+                        <ul class="toggle">
+                            <li class="icn_folder"><a href="__GROUP__/statistics/pv" target="content">访问统计</a></li>
+                            <li class="icn_folder"><a href="__GROUP__/statistics/data" target="content">内容统计</a></li>
+                            <li class="icn_folder"><a href="__GROUP__/statistics/faq" target="content">医患交流统计</a></li>
+                        </ul>
+                        <h3>生成HTML </h3>
+                        <ul class="toggle">
+                            <li class="icn_folder"><a href="__GROUP__/html/index" target="content">静态化选项</a></li>
+                            <li class="icn_folder"><a href="__GROUP__/html/buildIndex" target="content">生成首页HTML</a></li>
+                            <li class="icn_folder"><a href="__GROUP__/html/oneKeyArctype" target="content">一键生成栏目HTML</a></li>
+                            <li class="icn_folder"><a href="__GROUP__/html/oneKeyContent" target="content">一键生成内容HTML</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="menu_undis" id="tbc_05">
+                    <div class="nav_middle">
+                        <h3>模板替换 </h3>
+                        <ul class="toggle">
+                            <li class="icn_jump_back"><a href="__GROUP__/tpl/tplReplaceCheck" target="content">模板外部资源分析</a></li>
+                            <li class="icn_jump_back"><a href="__GROUP__/tpl/tplIncludeCheck" target="content">模板包含文件分析</a></li>
+                            <li class="icn_jump_back"><a href="__GROUP__/tpl/tplPreg" target="content">自定义替换</a></li>
+                            <li class="icn_edit_article"><a href="__GROUP__/tpl/fileManage" target="content">模版文件管理</a></li>
+                        </ul>
+                        <h3>内容模型管理 </h3>
+                        <ul class="toggle">
+                            <li class="icn_categories"><a href="__GROUP__/channel/show" target="content">内容模型列表</a></li>
+                            <li class="icn_new_article"><a href="__GROUP__/channel/add" target="content">添加新内容模型</a></li>
+                        </ul>
+                        <h3>客户后台管理 </h3>
+                        <ul class="toggle">
+                            <li class="icn_edit_article"><a href="__GROUP__/nav/navmanage" target="content">导航管理</a></li>
+                            <li class="icn_new_article"><a href="__GROUP__/nav/navadd" target="content">添加新的导航</a></li>
+                            <li class="icn_edit_article"><a href="__GROUP__/nav/modulemanage" target="content">模块管理</a></li>
+                            <li class="icn_new_article"><a href="__GROUP__/nav/moduleadd" target="content">添加新的模块</a></li>
+                        </ul>
+                        <h3>批量生成</h3>
+                        <ul class="toggle">
+                            <li class="icn_categories"><a href="__GROUP__/helper/createArctype" target="content">批量导入栏目</a></li>
+                            <li class="icn_categories"><a href="__GROUP__/helper/createContent" target="content">批量生成测试数据</a></li>
+                            <li class="icn_categories"><a href="__GROUP__/helper/clearContent" target="content">清空测试数据</a></li>
+                            <li class="icn_categories"><a href="__GROUP__/sites/exportArctypeXml" target="content">生成栏目 site.xml</a>
+                            </li>
+                            <li class="icn_categories"><a href="__GROUP__/backup/show" target="content">栏目备份还原</a></li>
+                        </ul>
+                        <h3>其他功能 </h3>
+                        <ul class="toggle">
+                            <li class="icn_edit_article"><a href="__GROUP__/upload/fileManage" target="content">上传文件管理</a></li>
+                            <li class="icn_add_user"><a href="__INC__/dbtool/index.php?cmysql=<?php echo md5('mysqldb##'); ?>" target="content">数据库维护</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="menu_undis" id="tbc_06">
+                    <div class="nav_middle">
+                        <h3>产品管理 </h3>
+                        <ul class="toggle">
+                            <li class="icn_new_article"><a href="__GROUP__/product/show" target="content">产品管理</a></li>
+                            <li class="icn_new_article"><a href="__GROUP__/product/data" target="content">数据管理</a></li>
+                        </ul>
+                        <h3>人才招聘 </h3>
+                        <ul class="toggle">
+                            <li class="icn_new_article"><a href="__GROUP__/resume/show" target="content">人才库</a></li>
+                        </ul>
+                        <h3>下单列表 </h3>
+                        <ul class="toggle">
+                            <li class="icn_new_article"><a href="__GROUP__/mall/order" target="content">订单列表(mall)</a></li>
+                            <li class="icn_new_article"><a href="__GROUP__/common/khorder" target="content">预约列表</a></li>
+                            <li class="icn_new_article"><a href="__GROUP__/common/goldvote" target="content">投票</a></li>
+                        </ul>
+                         <h3>广告管理 </h3>
+                        <ul class="toggle">
+                            <li class="icn_categories"><a href="__GROUP__/ad/show" target="content">广告列表</a></li>
+                            <li class="icn_new_article"><a href="__GROUP__/ad/add" target="content">添加广告</a></li>
+                        </ul>
+                        <h3>友链管理 </h3>
+                        <ul class="toggle">
+                            <li class="icn_categories"><a href="__GROUP__/flink/flinktype" target="content">友链类别管理</a></li>
+                            <li class="icn_categories"><a href="__GROUP__/flink/show" target="content">友链列表</a></li>
+                            <li class="icn_new_article"><a href="__GROUP__/flink/add" target="content">添加友链</a></li>
+                        </ul>
+                        <h3>投票管理 </h3>
+                        <ul class="toggle">
+                            <li class="icn_categories"><a href="__GROUP__/votetype/show" target="content">投票主题管理</a></li>
+                            <li class="icn_categories"><a href="__GROUP__/voteq/show" target="content">投票问题管理</a></li>
+                            <li class="icn_categories"><a href="__GROUP__/votea/show" target="content">投票选项管理</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--切换内容 end-->
+    </div>
+    <!--导航菜单 end-->
+    <div class="clearline"></div>
+</div>
+<!--左侧区域 end-->
+</body>
+</html>

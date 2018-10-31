@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>CMS</title>
+    <link href="__CSS__/common.css" rel="stylesheet"/>
+    <link href="__CSS__/right.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="__INC__/form/css/zebra_form.css" type="text/css">
+    <script type="text/javascript" language="javascript" src="__JS__/jquery-1.7.2.min.js"></script>
+    <link rel="stylesheet" href="__INC__/kindeditor/themes/default/default.css"/>
+    <!--link rel="stylesheet" href="../kindeditor/plugins/code/prettify.css" /-->
+    <script charset="utf-8" src="__INC__/kindeditor/kindeditor.js"></script>
+    <script charset="utf-8" src="__INC__/kindeditor/lang/zh_CN.js"></script>
+    <script charset="utf-8" src="__INC__/kindeditor/plugins/code/prettify.js"></script>
+    <script type="text/javascript" src="__INC__/form/js/highlight.js"></script>
+    <script type="text/javascript" src="__INC__/form/js/zebra_form.js"></script>
+    <script type="text/javascript" src="__INC__/form/js/functions.js"></script>
+    <script charset="utf-8" src="__JS__/common.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //When page loads...
+            $(".tab_content").hide(); //Hide all content
+            $("ul.tabs li:first").addClass("active").show(); //Activate first tab
+            $(".tab_content:first").show(); //Show first tab content
+            //On Click Event
+            $("ul.tabs li").click(function () {
+                $("ul.tabs li").removeClass("active"); //Remove any "active" class
+                $(this).addClass("active"); //Add "active" class to selected tab
+                $(".tab_content").hide(); //Hide all tab content
+                var activeTab = $(this).find("a").attr("href"); //Find the href attribute value to identify the active tab + content
+                $(activeTab).fadeIn(); //Fade in the active ID content
+                return false;
+            });
+        });
+    </script>
+    <!--圆角 兼容ie-->
+    <!--[if IE]>
+    <script type="text/JavaScript" src="js/curvycorners.src.js"></script>
+    <script type="text/JavaScript">
+        curvyCorners.addEvent(window, 'load', initCorners);
+        function initCorners() {
+            var settings = {
+                tl: { radius: 2 },
+                tr: { radius: 2 },
+                //bl: { radius: 2 },
+                //br: { radius: 2 },
+                antiAlias: true
+            }
+            curvyCorners(settings, ".tabs");
+        }
+    </script>
+    <![endif]-->
+</head>
+<body>
+<!--右侧区域 begin-->
+<div class="right">
+    <!--当前位置 begin-->
+    <include file='common:crumbs'/>
+    <!--当前位置 end-->
+    <!--主体区域 begin-->
+    <div class="container">
+        <div class="alert_div">
+            <h4 class="alert_info">您现在的位置是：{$current} <span class="welcome">{$welcome}</span></h4>
+            <h4 class="alert_what" style="display:none;"></h4>
+        </div>
+        <!--样式一 begin-->
+        <div class="stats">
+            <div class="lm_title">
+                <div class="lm_title_l">
+                    <em>会员详细信息
+                    <ul class="tabs">
+                        <li><a href="#tab1">收货地址</a></li>
+                        <li style="padding:0;margin:0;color:#CCC;height:24px;line-height:24px;width:1px;border-left:1px solid #CCC;"></li>
+                        <!-- <li><a href="#tab2">会员卡</a></li>-->
+                        <li><a href="#tab3">健康卡</a></li>
+                        <!--<li><a href="#tab4">备注</a></li>-->
+                    </ul>{$current}
+                    </em>
+                </div>
+            </div>
+            <div class="lm_content">
+                <div class="tab_container">
+                    <div id="tab1" class="tab_content">
+                        <!--样式二 begin-->
+                        <div class="lm_table">
+                            <table cellpadding="0" cellspacing="0" width="100%" class="table_list">
+                                <tr class="title" align="center">
+                                    <!--td>选择</td-->
+                                    <td>序号</td>
+                                    <td>收货姓名</td>
+                                    <td>国家</td>
+                                    <td>省区</td>
+                                    <td>城市</td>
+                                    <td>详细地址</td>
+                                    <td>电话</td>
+                                    <td>区号</td>
+                                </tr>
+                                <volist name='addrArr' id='vo'>
+                                    <tr class="tr_line">
+                                        <td colspan="10">
+                                            <div></div>
+                                        </td>
+                                    </tr>
+                                    <tr align="left">
+                                        <!--td><input type="checkbox" name="_check[]" value="{$vo.id}"></td-->
+                                        <td>{$vo.id}</td>
+                                        <td>{$vo.name}</td>
+                                        <td>{:getRegionNameById($vo['country'])}</td>
+                                        <td>{:getRegionNameById($vo['province'])}</td>
+                                        <td>{:getRegionNameById($vo['city'])}</td>
+                                        <td>{$vo['address']}</td>
+                                        <td>{$vo['tel']}</td>
+                                        <td>{$vo['zipcode']}</td>
+                                    </tr>
+                                </volist>
+                            </table>
+                        </div>
+                        <!--样式二 end-->
+                    </div>
+                    <div id="tab2" class="tab_content">
+                        <img src="{$minfo['litpic']}" style="height:300px;width:400px;border:3px solid #DBDBDE;"/>
+                    </div>
+                    <div id="tab3" class="tab_content">
+                        <iframe src="{:U('home/member/health?mid='.$minfo['id'])}" width="100%" height="850px;"></iframe>
+                    </div>
+                    <!-- 商品配件 -->
+                    <div id="tab4" class="tab_content">
+                        444
+                    </div>
+                </div>
+            </div>
+            <div class="lm_table_bottom">
+                <div class="lm_table_bottom_l"><em>
+                    <!--div class="select_btn"><input type="button" class="select_btn1" onclick="selAll()" value="" />&nbsp;&nbsp;<input type="button" onclick="selRev()" class="select_btn2" value="" /></div-->
+                    <div class="page">{$page}</div>
+                    <div class="clear"></div>
+                </em>
+                </div>
+            </div>
+        </div>
+        <!--样式一 end-->
+    </div>
+    <!--主体区域 end-->
+</div>
+<!--右侧区域  end-->
+</body>
+</html>

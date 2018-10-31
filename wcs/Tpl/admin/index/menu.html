@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>LEFT</title>
+    <link href="__CSS__/common.css" rel="stylesheet"/>
+    <link href="__CSS__/left.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="__CSS__/zTreeStyle.css" type="text/css">
+    <script type="text/javascript" src="__JS__/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="__JS__/jquery.ztree.all-3.3.min.js"></script>
+    <script type="text/javascript">
+        function alt() {
+            var height = document.documentElement.clientHeight - 35 + "px";
+            document.getElementById("n_zone_height").style.height = height;
+        }
+
+        function switchSite(sid) {
+            if (confirm("你确定要切换站点？")) {
+                parent.location.href = "{:U('index/changesite')}?sid=" + sid;
+            } else {
+                location.href = location.href;
+            }
+        }
+    </script>
+</head>
+
+<body style="background:#E0E0E3 url(__IMG__/left_bg.jpg) repeat-y right;" onload="alt();">
+<!--左侧区域 begin-->
+<div class="left">
+    <div class="fix">
+        <div class="user">
+            <p><span style="color:#5BBED2;">{$userid}</span>&nbsp;
+                <?php if( is_array($siteArr) && count($siteArr) >1 ){ ?>
+                <select name="siteid" style="width:80px;" onchange="switchSite(this.value)">
+                    <volist name="siteArr" id="vo">
+                        <option value="{$vo['id']}"
+                        <eq name="vo['id']" value="$Think.session.currentSiteId"> selected</eq>
+                        >{$vo['name']}</option>
+                    </volist>
+                </select>
+                <?php } else { echo  "站点：".$siteArr[0]['name']; } ?>
+            </p>
+        </div>
+    </div>
+    <!--导航菜单 begin-->
+    <div class="nav_zone" id="n_zone_height">
+        <div class="nav">
+            <div class="nav_top"></div>
+            <h3>{$navname} </h3>
+            <ul>
+                <volist name="module" id="vo">
+                    <if condition="$vo['url'] != '' ">
+                        <li><a href="{$vo['url']}" target="content">{$vo['name']}</a></li>
+                    <else/>
+                        <li><a href="__GROUP__/{$vo['module']}/{$vo['action']}" target="content">{$vo['name']}</a></li>
+                    </if>
+                </volist>
+            </ul>
+            <div class="nav_bottom"></div>
+        </div>
+    </div>
+    <!--导航菜单 end-->
+</div>
+<!--左侧区域 end-->
+</body>
+</html>

@@ -1,0 +1,48 @@
+ 
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8" />
+<title>建议用于WAP站的图片上传示例</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" type="text/css" href="__INC__/webupload/webuploader.css">
+<link rel="stylesheet" type="text/css" href="__INC__/webupload/upfile.css">
+</head>
+<body>
+
+<dl class="clearfix">
+  <dt>上传照片</dt>
+  <dd>
+   <input type="hidden" name="img" value="" id="img">
+   <div id="uploader">
+    <div class="queueList">
+        <div id="dndArea" class="placeholder">
+            <div id="filePicker"></div>
+        </div>
+    </div>
+    <div class="statusBar" style="display:none;">
+        <div class="progress">
+            <span class="text">0%</span>
+            <span class="percentage"></span>
+        </div>
+        <div class="info"></div>
+        <div class="btns">
+            <!--<div id="filePicker2"></div>-->
+            <div class="uploadBtn">开始上传</div>
+        </div>
+    </div>
+   </div>
+  </dd>
+</dl>
+ 
+<script type="text/javascript">
+     var BASE_URL = '__INC__/webupload';
+	 var imgid = '#img';
+</script>
+<script type="text/javascript" src="__INC__/webupload/js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="__INC__/webupload/js/webuploader.js"></script>
+<script type="text/javascript" src="__INC__/webupload/js/upfile.js"></script>
+</body>
+</html>

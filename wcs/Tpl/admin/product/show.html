@@ -1,0 +1,584 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>CMS</title>
+    <link href="__CSS__/common.css" rel="stylesheet"/>
+    <link href="__CSS__/right.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="__CSS__/extjs/css/ext-all.css"/>
+    <script type="text/javascript" language="javascript" src="__JS__/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="__JS__/extjs/ext-base.js"></script>
+    <script type="text/javascript" src="__JS__/extjs/ext-all.js"></script>
+    <script type="text/javascript" src="__JS__/extjs/ext-lang-zh_CN.js"></script>
+    <script charset="utf-8" src="__JS__/common.js"></script>
+    <style type="text/css">
+        .x-grid3-col {
+            padding: 5px;
+        }
+        .x-grid-back-red {
+            background: #EEEEEE;
+        }
+    </style>
+</head>
+<body>
+<!--右侧区域 begin-->
+<div class="right">
+    <!--当前位置 begin-->
+    <include file='common:crumbs'/>
+    <!--当前位置 end-->
+    <!--主体区域 begin-->
+    <div class="container">
+        <div class="alert_div">
+            <h4 class="alert_info"><span class="welcome">{$welcome}</span>您现在的位置是：{$current} </h4>
+            <h4 class="alert_what" style="display:none;"></h4>
+        </div>
+        <!--样式一 begin-->
+        <div class="stats">
+            <div class="lm_title">
+                <div class="lm_title_l"><em>健康及产品管理</em></div>
+            </div>
+            <div class="lm_content">
+                <div id="product_grid"></div>
+            </div>
+            <div class="lm_bottom">
+                <div class="lm_bottom_l"><em></em></div>
+            </div>
+        </div>
+        <!--样式一 end-->
+    </div>
+    <!--主体区域 end-->
+</div>
+<!--右侧区域  end-->
+</body>
+<script type="text/javascript">
+var adminName = "张飞";
+var pageNum = 10;
+
+Ext.util.CSS.swapStyleSheet("theme", "__CSS__/extjs/css/xtheme-gray.css");
+Ext.QuickTips.init();
+
+/* Ext.apply(Ext.form.VTypes, {
+ IPAddress:  function(v) {
+ return /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(v);
+ },
+
+ IPAddressText: '必须是一个IP地址',
+ IPAddressMask: /[\d\.]/i
+ }); */
+
+Ext.form.VTypes = function () {
+    var alpha = /^[a-zA-Z_]+$/;
+    var alphanum = /^[a-zA-Z0-9_]+$/;
+    var number = /^[0-9]+$/;
+    var email = /^(\w+)([-+.][\w]+)*@(\w[-\w]*\.){1,5}([A-Za-z]){2,4}$/;
+    var url = /(((https?)|(ftp)):\/\/([\-\w]+\.)+\w{2,3}(\/[%\-\w]+(\.\w{2,})?)*(([\w\-\.\?\\\/+@&#;`~=%!]*)(\.\w{2,})?)*\/?)/i;
+    return {
+        'email': function (v) {
+            return email.test(v);
+        },
+        'emailText': '必须是正确的email地址，例如： "user@jiuletech.com"',
+        'emailMask': /[a-z0-9_\.\-@]/i,
+        'url': function (v) {
+            return url.test(v);
+        },
+        'urlText': '必须是一个正确的URL地址，例如： "http:/' + '/www.jiuletech.com"',
+        'alpha': function (v) {
+            return alpha.test(v);
+        },
+        'alphaText': '只能包含字母和下划线',
+        'alphaMask': /[a-z_]/i,
+        'alphanum': function (v) {
+            return alphanum.test(v);
+        },
+        'alphanumText': '只能包含字母、数字、下划线',
+        'alphanumMask': /[a-z0-9_]/i,
+        'number': function (v) {
+            return number.test(v);
+        },
+        'numberText': '只能是数字',
+        'numberMask': /[0-9]/i
+    };
+}();
+
+Ext.onReady(function () {
+    var Record = Ext.data.Record.create([
+        {name: 'id', type: 'int'},
+        {name: 'pid', type: 'string'},
+        {name: 'mode', type: 'string'},
+        {name: 'saled', type: 'int'},
+        {name: 'registed', type: 'int'},
+        {name: 'status', type: 'int'},
+        {name: 'date', type: 'date'},
+        {name: 'pubdate', type: 'string'},
+        {name: 'pubuserid', type: 'string'}
+    ]);
+
+    // create the Data Store
+    var store = new Ext.data.Store({
+        proxy: new Ext.data.HttpProxy({url: '__GROUP__/extajax/getProductJson'}),
+        reader: new Ext.data.JsonReader({totalProperty: "results", root: "rows", idProperty: "id"}, Record),
+        pruneModifiedRecords: true, //每次操作清除modified
+        remoteSort: true
+    });
+    //store.load();
+
+    var sm = new Ext.grid.CheckboxSelectionModel();
+    var cm = new Ext.grid.ColumnModel([
+        {header: '序号', dataIndex: 'id', sortable: true, remoteSort: true, width: 45, renderer: function (v, m) {
+            m.css = 'x-grid-back-red';
+            return v;
+        }},
+        {header: '机器编号', dataIndex: 'pid', editor: new Ext.grid.GridEditor(new Ext.form.TextField({
+            allowBlank: false,
+            vtype: 'alphanum'
+        }))},
+        {header: '型号', dataIndex: 'mode', editor: new Ext.grid.GridEditor(new Ext.form.TextField({
+
+            allowBlank: false
+
+        })), width: 80},
+        {header: '是否卖出', dataIndex: 'saled', sortable: true, remoteSort: true, renderer: function (value) {
+            switch (value) {
+                case 1 :
+                    return "已经卖出";
+                case -1 :
+                    return "尚未卖出";
+                default :
+                    return "";
+            }
+        },
+            editor: new Ext.grid.GridEditor(new Ext.form.ComboBox({
+                id: 'select_saled',
+                name: 'select_saled',
+                displayField: 'text',
+                valueField: 'value',
+                emptyText: '请选择',
+                editable: false,
+                mode: 'local',
+                triggerAction: 'all',
+                store: new Ext.data.SimpleStore({
+                    fields: ['value', 'text'],
+                    data: [
+                        [-1, '尚未卖出'],
+                        [1, '已经卖出']
+                    ]
+                })
+            })), width: 60},
+        {header: '是否注册', dataIndex: 'registed', sortable: true, remoteSort: true, renderer: function (value) {
+            switch (value) {
+                case 1 :
+                    return "已经注册";
+                case -1 :
+                    return "尚未注册";
+                default :
+                    return "";
+            }
+        },
+            editor: new Ext.grid.GridEditor(new Ext.form.ComboBox({
+                id: 'select_registed',
+                name: 'select_registed',
+                displayField: 'text',
+                valueField: 'value',
+                emptyText: '请选择',
+                editable: false,
+                mode: 'local',
+                triggerAction: 'all',
+                store: new Ext.data.SimpleStore({
+                    fields: ['value', 'text'],
+                    data: [
+                        [-1, '尚未注册'],
+                        [1, '已经注册']
+                    ]
+                })
+            })), width: 60},
+        {header: '状态', dataIndex: 'status', sortable: true, remoteSort: true, renderer: function (value) {
+            switch (value) {
+                case 1 :
+                    return "正常";
+                case 2 :
+                    return "故障待修";
+                case 3 :
+                    return "故障在修";
+                case 4 :
+                    return "报废";
+                case 5 :
+                    return "遗失";
+                default :
+                    return "其他";
+            }
+        },
+            editor: new Ext.grid.GridEditor(new Ext.form.ComboBox({
+                id: 'select_status',
+                name: 'select_status',
+                displayField: 'text',
+                valueField: 'value',
+                emptyText: '请选择',
+                editable: false,
+                mode: 'local',
+                triggerAction: 'all',
+                store: new Ext.data.SimpleStore({
+                    fields: ['value', 'text'],
+                    data: [
+                        [1, '正常'],
+                        [2, '故障待修'],
+                        [3, '故障在修'],
+                        [4, '报废'],
+                        [5, '遗失'],
+                        [6, '其他']
+                    ]
+                })
+
+            })), width: 60},
+        {header: '生产日期', dataIndex: 'date', sortable: true, remoteSort: true, renderer: function (value) {
+            if (value == null || value == 0) {
+                return '';
+            } else {
+                return Ext.util.Format.date(new Date(value), "Y年m月d日");
+            }
+        }, editor: new Ext.grid.GridEditor(new Ext.form.DateField({
+            format: "Y年m月d日",
+            allowBlank: false
+        })), width: 90},
+        {header: '录入时间', dataIndex: 'pubdate', sortable: true, remoteSort: true, renderer: function (value, m) {
+            m.css = 'x-grid-back-red';
+            if (value == null || value == 0) {
+                return '';
+            } else {
+                return Ext.util.Format.date(new Date(parseInt(value) * 1000), "Y年m月d日  h:i:s");
+            }
+        }, width: 130},
+        {header: '录入人员', dataIndex: 'pubuserid', width: 50, renderer: function (v, m) {
+            m.css = 'x-grid-back-red';
+            return v;
+        }}
+    ]);
+
+    //控件
+    var mybar = new Ext.Toolbar(['-', {
+        text: '添加一条',
+        handler: function () {
+            var initValue = {};
+            var p = new Record(initValue);
+            grid.stopEditing();
+            store.insert(0, p);
+            grid.startEditing(0, 1);
+            p.dirty = true;
+            p.modified = initValue;
+            if (store.modified.indexOf(p) == -1) {
+                store.modified.push(p);
+            }
+        }
+    }, '-', {
+        text: '删除选中',
+        handler: function () {
+            selectedArr = sm.getSelections();
+            var selectedTotle = sm.getCount();
+            if (Ext.util.Format.undef(selectedArr) == "") {
+                jl_notify(3, "您没有选中任何项！");
+                return;
+            }
+            Ext.Msg.confirm('信息', '确定要删除选中的' + selectedTotle + '条数据？', function (btn) {
+                if (btn == 'yes') {
+                    var items = "";
+                    for (var i = 0; i < selectedTotle; i++) {
+                        if (i > 0 && i < selectedTotle)items += ",";
+                        items += selectedArr[i].id;
+                    }
+
+                    Ext.lib.Ajax.request(
+                            'POST',
+                            '__GROUP__/extajax/productOneKeyDel',
+                            {success: function (response) {
+                                var myresponse = Ext.util.JSON.decode(response.responseText);
+                                if (myresponse.code == -1) {
+                                    /*                           Ext.Msg.alert('信息', response.responseText, function(){
+                                     store.reload();
+                                     }); */
+                                    jl_notify(2, myresponse.responseText);
+                                } else {
+                                    store.reload();
+                                    jl_notify(1, myresponse.responseText);
+                                }
+
+                            }, failure: function () {
+                                Ext.Msg.alert("错误", "与后台联系的时候出现了问题");
+                            }},
+                            'data=' + items
+                    );
+                }
+            });
+        }
+    }, '-', {
+        text: '保存更改',
+        handler: function () {
+            var m = store.modified.slice(0);
+            var jsonArray = [];
+            Ext.each(m, function (item) {
+                var temp = new Object();
+                var oldStore = store.getById(item.data['id']);
+                if (oldStore == null) {
+                    if (Ext.util.Format.undef(item.data.date) != "") {
+                        item.data.date = Ext.util.Format.date(new Date(item.data.date), 'Y-m-d');
+                    }
+                    item.data.pubuserid = adminName;
+                    jsonArray.push(item.data);
+                } else {
+                    for (var i in oldStore.modified) {
+                        temp.id = item.data['id'];
+                        eval("temp." + i + "=item.data." + i + ";");
+                        if (Ext.util.Format.undef(temp.date) != "") {
+                            temp.date = Ext.util.Format.date(new Date(temp.date), 'Y-m-d');
+                        }
+                        temp.pubuserid = adminName;
+                    }
+                    jsonArray.push(temp);
+                }
+            });
+
+            Ext.lib.Ajax.request(
+                    'POST',
+                    '__GROUP__/extajax/productOneKeySave',
+                    {success: function (response) {
+                        var myresponse = Ext.util.JSON.decode(response.responseText);
+                        if (myresponse.code == -1) {
+                            /*                           Ext.Msg.alert('信息', response.responseText, function(){
+                             store.reload();
+                             }); */
+                            jl_notify(2, myresponse.responseText);
+                        } else {
+                            store.reload();
+                            jl_notify(1, myresponse.responseText);
+                        }
+                    }, failure: function () {
+                        Ext.Msg.alert("错误", "与后台联系的时候出现了问题");
+                    }},
+                    'data=' + encodeURIComponent(Ext.encode(jsonArray))
+            );
+        }
+    }, '-', {
+        text: '撤销更改',
+        handler: function () {
+            store.reload();
+        }
+    }, '-', {
+        xtype: "button",
+        text: "导出",
+        menu: {
+            items: [
+                {
+                    text: '导出所有页面',
+                    handler: function () {
+                        $.post("__GROUP__/extajax/getProductJson", {exportxls: 1}, function (data) {
+                            if (data != '') {
+                                if (data['code'] == 1) {
+                                    location.href = data['download'];
+                                    //alert(data['download']);
+                                } else {
+
+                                    jl_notify(2, "导出execl数据失败！");
+                                }
+                            }
+                        }, 'json')
+                    }
+                },
+                {
+                    text: '导出当前页面',
+                    handler: function () {
+                        var lastParams = store.lastOptions.params;
+                        lastParams['exportxls'] = 1;
+                        $.post("__GROUP__/extajax/getProductJson", lastParams, function (data) {
+                            if (data != '') {
+                                if (data['code'] == 1) {
+                                    location.href = data['download'];
+                                    //alert(data['download']);
+                                } else {
+
+                                    jl_notify(2, "导出execl数据失败！");
+                                }
+                            }
+                        }, 'json')
+                    }
+                }
+            ]
+        }
+    }, '-', {xtype: "tbtext", text: '机器编号：'},
+        new Ext.form.TextField({
+            id: "filter_pid",
+            vtype: 'alphanum'
+        }), ' ', {xtype: "tbtext", text: '型号：'}, new Ext.form.TextField({id: "filter_mode"}), new Ext.form.ComboBox({
+            id: 'filter_registed',
+            name: 'filter_registed',
+            displayField: 'text',
+            valueField: 'value',
+            emptyText: '是否注册',
+            editable: false,
+            mode: 'local',
+            triggerAction: 'all',
+            width: 80,
+            store: new Ext.data.SimpleStore({
+                fields: ['value', 'text'],
+                data: [
+                    [-1, '尚未注册'],
+                    [1, '已经注册'],
+                    ['', '不限']
+                ]
+            })
+        }), new Ext.form.ComboBox({
+            id: 'filter_saled',
+            name: 'filter_saled',
+            displayField: 'text',
+            valueField: 'value',
+            emptyText: '是否卖出',
+            editable: false,
+            mode: 'local',
+            triggerAction: 'all',
+            width: 80,
+            store: new Ext.data.SimpleStore({
+                fields: ['value', 'text'],
+                data: [
+                    [-1, '尚未卖出'],
+                    [1, '已经卖出'],
+                    ['', '不限']
+                ]
+            })
+        }), new Ext.form.ComboBox({
+            id: 'filter_status',
+            name: 'filter_status',
+            displayField: 'text',
+            valueField: 'value',
+            emptyText: '状态筛选',
+            editable: false,
+            mode: 'local',
+            triggerAction: 'all',
+            width: 100,
+            store: new Ext.data.SimpleStore({
+                fields: ['value', 'text'],
+                data: [
+                    [1, '正常'],
+                    [2, '故障待修'],
+                    [3, '故障在修'],
+                    [4, '报废'],
+                    [5, '遗失'],
+                    [6, '其他'],
+                    ['', '不限']
+                ]
+            })
+        }), {
+            text: '应用筛选',
+            handler: function () {
+                var filter_pid = Ext.getCmp("filter_pid").getValue();
+                var filter_mode = Ext.getCmp("filter_mode").getValue();
+                var filter_registed = Ext.getCmp("filter_registed").getValue();
+                var filter_saled = Ext.getCmp("filter_saled").getValue();
+                var filter_status = Ext.getCmp("filter_status").getValue();
+                Ext.apply(Ext.getCmp("product_id").store.baseParams, { "filter_like_pid": filter_pid, "filter_like_mode": filter_mode, "filter_req_registed": filter_registed, "filter_req_saled": filter_saled, "filter_req_status": filter_status});
+                Ext.getCmp("product_id").store.removeAll();
+                Ext.getCmp("product_id").store.load({params: {start: 0, limit: pageNum}});
+            }
+        }
+    ]);
+
+    var grid = new Ext.grid.EditorGridPanel({
+        id: "product_id",
+        height: 500,
+        autoHeight: true,
+        bodyStyle: 'width:100%',
+        autoWidth: true,
+        title: '',
+        store: store,
+        trackMouseOver: true,
+        loadMask: true,
+        stripeRows: true,
+        cm: cm,
+        sm: sm,
+        clicksToEdit: 1,
+        viewConfig: {
+            forceFit: true,
+            enableRowBody: true,
+            showPreview: true
+        },
+        bbar: [new Ext.PagingToolbar({
+            id: "page_toolbar",
+            pageSize: pageNum,
+            store: store,
+            displayInfo: true,
+            displayMsg: '总共 {2}条数据，当前显示 {0} - {1} 条数据',
+            emptyMsg: "没有数据"
+        }), {xtype: "tbfill"}, {
+            xtype: "button",
+            text: '分页大小',
+            menu: {
+                items: [
+                    {
+                        text: '10条',
+                        handler: function () {
+                            pageNum = 10;
+                            Ext.getCmp("page_toolbar").pageSize = pageNum;
+                            Ext.getCmp("page_num_text").setValue(pageNum);
+                            store.removeAll();
+                            store.load({params: {start: 0, limit: pageNum}});
+                        }
+                    },
+                    {
+                        text: '20条',
+                        handler: function () {
+                            pageNum = 20;
+                            Ext.getCmp("page_toolbar").pageSize = pageNum;
+                            Ext.getCmp("page_num_text").setValue(pageNum);
+                            store.removeAll();
+                            store.load({params: {start: 0, limit: pageNum}});
+                        }
+                    },
+                    {
+                        text: '30条',
+                        handler: function () {
+                            pageNum = 30;
+                            Ext.getCmp("page_toolbar").pageSize = pageNum;
+                            Ext.getCmp("page_num_text").setValue(pageNum);
+                            store.removeAll();
+                            store.load({params: {start: 0, limit: pageNum}});
+                        }},
+                    {
+                        text: '50条',
+                        handler: function () {
+                            pageNum = 50;
+                            Ext.getCmp("page_toolbar").pageSize = pageNum;
+                            Ext.getCmp("page_num_text").setValue(pageNum);
+                            store.removeAll();
+                            store.load({params: {start: 0, limit: pageNum}});
+                        }},
+                    {
+                        text: '100条',
+                        handler: function () {
+                            pageNum = 100;
+                            Ext.getCmp("page_toolbar").pageSize = pageNum;
+                            Ext.getCmp("page_num_text").setValue(pageNum);
+                            store.removeAll();
+                            store.load({params: {start: 0, limit: pageNum}});
+                        }
+                    }
+                ]
+            }
+        }, new Ext.form.TextField({
+            id: "page_num_text",
+            value: "10",
+            width: 30,
+            //disabled:true,
+            readOnly: true,
+            vtype: 'alphanum'
+        }), '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'],
+        tbar: mybar
+    });
+
+    // 渲染
+    grid.render('product_grid');
+
+    window.onresize = function () {
+        grid.setWidth(0);
+        grid.setWidth(Ext.get("product_grid").getWidth());
+    };
+    // 取得数据
+    store.load({params: {start: 0, limit: pageNum}});
+});
+</script>
+</html>

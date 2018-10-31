@@ -1,0 +1,142 @@
+@charset "utf-8";
+/* 初始化CSS */
+*{margin:0; padding:0;}
+h1, h2, h3, h4, h5, h6{font-size:100%; font-weight:bold;}
+fieldset, img{border:none; vertical-align:middle;}
+address, caption, cite, code, dfn, th, var{font-style:normal; font-weight:normal;}
+ul, ol{list-style:none;}
+li{list-style-type:none;}
+input{padding-top:0; padding-bottom:0; font-family: "microsoft yahei",Arial,sans-serif;}
+select, input{vertical-align:middle;}
+select, input, textarea{ margin:0; font-size:12px;}
+input[type="text"], input[type="password"], textarea{outline-style:none;}
+textarea{font-family: "microsoft yahei",Arial,sans-serif; resize:none;}
+body{font-family:"microsoft yahei",Arial,sans-serif; color:#333; background:#fff; }
+html{font-size:62.5%;}
+a{text-decoration:none; color:inherit;}
+i, em{ font-style:normal;}
+.clearfix:after{ display:block; visibility:hidden; clear:both; height:0; content:"";}
+.clearfix{zoom:1;}
+.fl{ float:left;}
+.fr{ float:right;}
+.auto{ margin-left:auto; margin-right:auto;}
+
+html, body {position: relative; height:100%;width: 100%;margin: auto;overflow-x: hidden;}
+.swiper-container {width:100%; height: 100%;}
+.swiper-slide{ overflow:hidden;width: 100%;height: 100%;}
+
+.slide1{ background:url(../images/1.jpg) center top no-repeat; -position: relative;-webkit-background-size: cover;
+background-size: cover;}
+.slide1_1{position: absolute;bottom: 0;left:0;width: 39%;z-index: 2;}
+.slide1_1 img,.slide1_2 img{width: 100%;}
+.slide1_2{position: absolute;bottom: 0;right:0;width: 40%;}
+.slide1_3{position: absolute;left:0;bottom:8%;width: 55%;}
+.slide1_3 img,.slide1_4 img{width: 100%;}
+.slide1_4{position: absolute;right:0;width: 45%;bottom:7%;}
+.slide1_5{position: absolute;right:0;width: 45%;bottom:7%;}
+.slide1_5 img{width: 100%;}
+/*第一屏*/
+.slide2{ position: relative;background:url(../images/2.jpg) center top no-repeat;-webkit-background-size: cover;
+background-size: cover;width: 100%;height: 100%;z-index: 3;}
+.slide2_0{ width: 100%;;height: 100%;z-index: 4;}
+.slide2_1,.slide2_2,.slide2_3,.slide2_5{position: absolute;width: 40%;left:0;top:0;z-index: 4;}
+.slide2_1 img,.slide2_2 img,.slide2_3 img,.slide2_5 img{width: 100%;}
+.slide2_4{position: absolute;right: 0;bottom:0;width: 38%;z-index: 4;}
+.slide2_4 img,.slide2_6 img{width: 100%;}
+.slide2_6{position: absolute;right: 0;bottom:0;width: 60%;z-index: 4;}
+/*第二屏*/
+.slide3_main{position: relative;z-index: 9;background: #031762;}
+.slide3{position: absolute;background: url('../images/3.jpg') center bottom no-repeat;-webkit-background-size: cover;
+background-size: cover;width: 100%;height: 100%;top:0;left:0;}
+.slide3_bg,.slide3_fl{width: 100%;position: absolute;bottom:0;left:0;height: 100%;z-index: 3;background: url('../images/32.png') center center no-repeat;-webkit-background-size: cover;
+background-size: cover;}
+.slide3_fl{background: url('../images/3_fl.png') center center no-repeat;z-index: 1;}
+.slide3_2{    position: absolute;   left: 50%;   width: 550px;  bottom: -72px;  z-index: 2;  margin-left: 136px;}
+.slide3_2 img{width: 100%;}
+.slide3_1{width: 100%;position: absolute;z-index: 2;}
+.slide3_1 img,.slide3_3 img{width: 100%;}
+.slide3_box{width: 100%;height: 100%;position: absolute;left:0;top:0;}
+.slide3_box_bg{position: absolute;left:50%;bottom:-66px;margin-left: 145px;}
+.slide3_3{    position: absolute;    left: 50%;    width: 428px;    bottom: -15px;    z-index: 2;    margin-left: 197px;}
+.wz_3,.wz_4{position: absolute;left:120px;top: 0;z-index: 10; }
+.wz_4{left:200px;}
+.x_3,.x_4,.x_5{position: absolute;z-index: 10;left:50%;margin-left: -158px;top: 423px;}
+.x_4{top:435px;}
+.x_5{top:474px;}
+
+/*第三屏*/
+.slide4{background:url(../images/4.jpg) center top no-repeat;position: relative;-webkit-background-size: cover;
+background-size: cover;}
+.slide4_1,.slide4_2{ width: 48%; position: absolute;  right: 0%;  top: 0%;height:100%;}
+.slide4_1 img{width: 100%;height:100%;}
+.slide4_2 {width: 48% !important;top:2%;}
+.slide4_a{bottom:20px;position: absolute;width: 100%;color: #031762;font-size: 15px;z-index: 4;text-align: center;}
+.slide4_a a{display: inline-block;margin: 0 5px;}
+.slide4_a_3{z-index: 99;}
+.slide4_a_5{z-index: 5;}
+
+
+
+.logoWrap{display: block;width: 500px;height: 500px;margin: 116px auto 0;position: relative;}
+.logo{display: block;position: absolute;z-index: 2;text-align: center;top:44px;left:90px;}
+.logo img{width: 320px;display: inline-block;opacity: 0;}
+.logoSvg{width: 500px;height: 500px;position: absolute;left: 30px;top: -83px;z-index: 1;}
+#path1,#path2,#path3{stroke-dasharray: 800; stroke-dashoffset: 800; }
+
+
+
+.logoWrap.curPage .logo img{-webkit-animation: svg_3_ani 3s 3.2s ease forwards; -moz-animation: svg_3_ani 3s 3.2s ease forwards; animation: svg_3_ani 3s 3.2s ease forwards;opacity: 0;}
+.logoWrap.curPage .logoSvg{-webkit-animation: svg_1_ani 2s 3s ease forwards; 
+-moz-animation: svg_1_ani 2s 3s ease forwards; animation: svg_1_ani 2s 3s ease forwards;}
+.logoWrap.curPage #path1,.logoWrap.curPage #path2,.logoWrap.curPage #path3{stroke-dasharray: 800; stroke-dashoffset: 800;
+ -webkit-animation: svg_2_ani 1.8s 0.8s ease forwards;  
+-moz-animation: svg_2_ani 1.8s 0.8s ease forwards; 
+animation: svg_2_ani 1.8s 0.8s ease forwards; }
+
+@-webkit-keyframes svg_1_ani{
+        0%{opacity:1;}
+        100%{opacity:0;}
+}
+@-moz-keyframes svg_1_ani{
+        0%{opacity:1;}
+        100%{opacity:0;}
+}
+@keyframes svg_1_ani{
+        0%{opacity:1;}
+        100%{opacity:0;}
+}
+
+@-webkit-keyframes svg_3_ani{
+        0%{opacity:0;}
+        100%{opacity:1;}
+}
+@-moz-keyframes svg_3_ani{
+        0%{opacity:0;}
+        100%{opacity:1;}
+}
+@keyframes svg_3_ani{
+        0%{opacity:0;}
+        100%{opacity:1;}
+}
+@-webkit-keyframes svg_2_ani{
+    0%{stroke-dashoffset:-800; }
+    100%{stroke-dashoffset:0;}
+}
+@-moz-keyframes svg_2_ani{
+     0%{stroke-dashoffset:-800; }
+    100%{stroke-dashoffset:0;}
+}
+@keyframes svg_2_ani{
+       0%{stroke-dashoffset:-800; }
+    100%{stroke-dashoffset:0;}
+}
+@media screen and (min-width: 1700px) {
+    .slide3_2 { margin-left: 248px;    bottom: -13px;}
+    .slide3_3 {    margin-left: 315px;    bottom: 42px;}
+    .slide3_fl{-webkit-background-size: cover;   background-size: cover;}
+}
+@media screen and  (min-width: 1024px) and (max-width:1400px) {
+    .slide3_2 { margin-left:59px;    bottom: -109px;}
+    .slide3_3 {    margin-left: 120px;    bottom: -58px;}
+    .slide3_fl{-webkit-background-size: cover;   background-size: cover;}
+}

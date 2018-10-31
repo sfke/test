@@ -1,0 +1,18 @@
+@charset "utf-8";
+/* CSS Document */
+html, body,div,ul, ol, li, dl, dt, dd, h1, h2, h3, h4, h5, h6, pre, form, p, blockquote, fieldset, img{padding:0;margin:0;}
+a{text-decoration:none;color:#2a0500}
+a:hover{color:#2a0500;}
+img{border:none;}
+li{list-style:none;}
+.clear{clear:both;}
+
+.menu_dis{display:block;}
+.menu_undis{display:none;}
+
+body{background:#F8F8F8;font-family: "Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;font-size:12px;}
+
+.color_red{color:red;}
+.color_blue{color:blue;}
+.color_green{color:green;}
+.color_yellow{color:#D2A431;}

@@ -1,0 +1,189 @@
+@charset "utf-8";
+*{margin:0;padding:0;}
+body{color:#393939;margin:0 auto;font-size:1em;line-height:1.25em;font-family:"微软雅黑";-webkit-text-size-adjust:none;padding-top:80px;padding-bottom:96px;}
+html{font-size: 1em;/* 16px */overflow-y: scroll;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;position: relative;}
+ol,ul,li{list-style:none;}
+img{border:none; vertical-align:top;}
+a{color:#393939;text-decoration:none;outline:none;}
+button,input,select,textarea{font-size:100%;font-family:tahoma;margin:0;outline:0 none;vertical-align:baseline;*vertical-align:middle;}
+a:hover{color:#f00;}
+.left{float:left;}
+.right{float:right;}
+.clearfix:before,.clearfix:after{content:''; display:table;}
+.clearfix:after{clear:both;}
+.clearfix{*zoom:1;}
+.clr{font-size:0;line-height:0px; height:10px; clear:both;}
+.text{display:block;text-align:center;}
+.none{ display:none;}
+em,i{font-style:normal;}
+.center{text-align:center;display:block;}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, nav, section { display: block; }
+audio, canvas, video{display: inline-block;*display: inline;*zoom: 1;}
+audio:not([controls]) { display: none; }
+[hidden] { display: none; }
+figure { margin: 0; }
+
+.main{margin:0 auto; font-size:14px; overflow-x:hidden;}
+header{position:fixed; text-align:center; height:80px; z-index:10; width:100%;top:0; left:0; background:#fff;}
+
+#menu-icon img{position:absolute; right:25px;top:22px;width:40px;height:33px;cursor: pointer;display: block; padding:5px 0 5px 20px;}
+#nav {clear: both;position: absolute;top:80px;right:0px;z-index: 10000;background:rgba(39,124,197,0.8);display: none;/*默认隐藏，通过jq实现显示隐藏切换*/}
+#nav li a{display:block; width:154px;height:63px;line-height:63px; border-bottom:1px solid #c2e3ff; color:#fff;font-size:22px;}	
+.top_black a{position:absolute; display:block; left:25px;top:20px; color:#d95b5b; font-size:30px; font-weight:bold;padding:5px 20px 5px 0;}
+.logo{padding-top:5px;font-size:28px; color:#2b2b2b;}
+.logotxt{line-height: 2.5;font-size: 2em;}
+/*banner*/
+.pic { width: 100%; }
+
+.pic > img { width: 100%; }
+/*banner*/
+.txtScroll-left { width: 100%;  z-index: 5; position: relative; background: rgba(255, 255, 255, 0.7); height: 30px; }
+
+.txtScroll-left .bd { width: 100%; overflow: hidden; height: 30px; }
+
+.txtScroll-left .bd ul { overflow: hidden; zoom: 1; height: 30px; }
+
+.txtScroll-left .bd ul li { float: left; width: 100%; height: 30px; line-height: 30px; text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
+.txtScroll-left .bd ul li span { float: left; margin-left: 15px; background: url("../images/gg.png") left center no-repeat; padding-left: 23px; margin-right: 8px; -webkit-background-size: 17px; background-size: 17px; font-size: 1.1rem; color: #ff3333; }
+
+.txtScroll-left .bd ul li a { float: left; display: inline-block; width: 57%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; margin-right: 15px; font-size: 1rem; color: #333; }
+
+
+/*首页按钮1*/
+.index_menu1{background:#fff; overflow:hidden; width:100%;}
+.index_menu1 li{float:left; width:47%; margin:10px 1.5%; text-align:center; text-align:center;}
+.index_menu1 li i{display: block;width:100%; height:0;padding-bottom: 65%;}
+.index_menu1 li span{display:block; font-size:32px; color:#277cc5; line-height:250%;}
+
+.index_new{padding: 0 1.5%;}
+.index_new dl{width: 100%;float: left;margin-bottom: 10px;}
+.index_new dl dt{width: 36%;float: left;}
+.index_new dl dt a{display: block;height: 0;padding-bottom: 60%;}
+.index_new dl dd{float: left;width:60%;margin: 0 10px;width:-webkit-calc(100% - 36% - 20px);	width: calc(100% - 36% - 20px);}
+.index_new dl dd a{display: block;}
+.index_new dl dd h5{overflow: hidden;;white-space: nowrap;text-overflow:ellipsis;font-size: 1rem;line-height: 2;}
+.index_new dl dd p{font-size: 12px;height: 44px;line-height: 22px;overflow: hidden;}
+.index_new dl dd h6{font-weight: normal;}
+.index_new dl dd i{float: right;}
+.index_new dl dd span{color: #999;font-size: 12px;}
+.index_new dl dd i{color: #666;font-size: 12px;}
+.index_new dl:hover {background: #073f8b;}
+.index_new dl:hover dd a,.index_new dl:hover dd i,.index_new dl:hover dd span{color: #fff;}
+/*首页案例*/
+.anli_bg{background:url(../images/index_al_bg.jpg) repeat; overflow:hidden;}
+.anli_bg h2{margin:27px 5% 0 4%; font-weight:normal; font-size:28px; color:#555; height:60px;}
+.anli_bg h2 a{float:right; padding-top:2%;}
+.anli_bg ul{clear:both; width:100%; overflow:hidden; padding-left:4%;}
+.anli_bg li{display:inline-block; float:left; position:relative; border:7px solid #dcdcdc; margin:0 5% 3% 2%;width:38.58%;height:auto; overflow:hidden;}
+.anli_bg li img{width:100%; height:auto;}
+.anli_bg li span{position:absolute; z-index:2; display:none; }
+.anli_bg li span i{display:inline-block; width:100%; height:100%; text-align:center;position:absolute;top:38%;}
+.anli_bg li a:hover span{display:inline-block;background:rgba(213,73,73,0.5) url(../images/anli_png.png) no-repeat; background-size:100% 100%; width:100%;height:100%;top:0;left:0; color:#fff;line-height:120%;}
+
+footer{background:#073f8b; height:96px;position:fixed; left:0; bottom:0; width:100%; z-index:4;}
+footer li{float:left; width:24.5%;height:96px; display:inline-block; text-align:center; }
+footer li i{display:inline-block; width:29px; height:29px; margin-top:17px;font-size: 26px !important;}
+footer li span{display:block; line-height:46px;font-size:32px;}
+footer li a{color:#fff; display:block; text-align:center;}
+footer li a:hover{ color:#277cc5;}
+
+.page{width: 97%;margin: 0 1.5% 15px 1.5%;}
+.page a{display: none;width: 44%;height: 30px;line-height: 30px;background: #073f8b;color: #fff;font-size: 1rem;text-align: center;}
+.page a:first-child{float: left;display: inline-block;}
+.page a:last-child{float: right;display: inline-block;}
+/*--内页--*/
+.ny_banner img{ width:100%; height:auto;}
+
+.ny_menu{ position:relative; width:100%;height:27px; }
+.ny_menu em{display:block; width:240px; height:67px; line-height:67px; text-align:center; font-size:28px;top:-24px;right:24px; position:absolute;z-index:4; background:#277cc5; color:#fff;}
+.ny_menu i{display:block;width:147px; height:58px;top:-31px;right:21px;position:absolute; z-index:3; background:rgba(247,166,0,0.8);}
+.ny_cont{padding:5%;width: 90%; line-height:150%;}
+
+/*新闻*/
+.news_cont{}
+.news_cont dl{ background:#f6f6f6; height:162px; overflow:hidden; margin-bottom:28px; position:relative;width:100%;}
+.news_cont dl:hover{ background:#277cc5; color:#fff;}
+.news_cont dt{position:absolute; left:0;width:205px;}
+.news_cont dt img{ width:205px;height:162px;}
+.news_cont dd{position:absolute; line-height:200%;left:205px;padding:10px 25px;overflow:hidden;width:50%;width:-moz-calc(100% - 265px);width:-weblit-calc(100% - 265px);width:calc(100% - 265px); }
+.news_cont dd h3{font-size:30px; font-weight:normal;display:block;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.news_cont dd h3 a{ color:#277cc5;}
+.news_cont dl:hover h3 a,.news_cont dd h3 a:hover{ color:#f7a600;}
+.news_cont dd p{display:block;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;overflow:hidden; font-size:26px;}
+.news_cont dd p.news_date{font-size:20px;}
+.news_cont dd p.news_date a{float:right;}
+.news_cont dl:hover p.news_date a,.news_cont dl:hover p.news_date a:hover{color:#fff;}
+
+/*产品分类*/
+.pro_ul li{float:left;text-align:center;width: 47%;margin:12px 1.5%;height:auto; overflow:hidden; background:#e8e8e8;}
+.pro_ul li i{display: block;width:90%;width:-moz-calc(100% - 10px);width:-weblit-calc(100% - 10px);width:calc(100% - 10px);height:0; padding:5px;padding-bottom: 60%;}
+.pro_ul li span{display:block;line-height:300%;overflow: hidden;;white-space: nowrap;text-overflow:ellipsis;}
+.twocolumns{ width: 100%; height: 30px;border-bottom: 1px solid #ddd; box-sizing: border-box; box-shadow: 0 3px 3px #eee; background: #073f8b; overflow: hidden; }
+.twocolumns .swiper-slide { width:auto; }
+.twocolumns .swiper-slide a{ display: block;height: 30px;line-height: 28px; font-size: 1rem; color: #fff; padding: 0 20px; }
+.twocolumns .swiper-slide.on a{background: #5283c4; color: #fff; }
+.twocolumns .swiper-slide a:hover{ text-decoration: none; background: #5283c4; }
+
+.show_cont{}
+.show_cont img{ text-align:center;width:90%; height:auto;}
+.news_cont_div{text-align:center; font-weight:normal; line-height:2;font-size: 1.2rem;}
+.news_cont_em{width: 100%;border-bottom: 1px dashed #ccc;font-size: 12px;text-align: center;}
+.news_cont_em em{margin: 0 10px;color: #999;}
+.cont_show_box{margin: 10px 0;width: 100%;line-height: 22px;font-size: 13px;overflow: hidden;color: #666;}
+.cont_show_box table,.cont_show_box img,.ny_cont img,.ny_cont table{max-width: 100%;}
+@media screen and (min-width:680px){
+.main{font-size:24px;}	
+}
+@media screen and (max-width:680px){
+body{padding-top:63px;padding-bottom:68px;}
+header{ height:63px;}
+.main{font-size:16px;}
+#nav-wrap{right:25px;top:17px;}
+#nav{top:63px}
+#menu-icon img{width:28px;height:22px;top:18px;}
+#nav li a{width:116px; height:44px;line-height:44px;font-size:16px;}
+.top_black a{top:18px;font-size:25px;}
+.top_black a img{height:22px;}
+.logo{padding-top:10px;}
+.logo img{height:45px;}
+.logotxt{line-height: 2.8;font-size: 22px;}
+.slideBox .hd ul li{width:50px; height:8px;}
+.index_menu1 li span{font-size:18px;line-height:250%;}
+.index_menu2 li a{height:122px;}
+.index_menu2 li a i{width:38px; height:38px; margin-top:30px;}
+.index_menu2 li a span{font-size:20px; line-height:36px;}
+
+footer{height:68px;}	
+footer li i{width:22px; height:22px; margin-top:12px;}
+footer li span{line-height:29px;font-size:16px;}
+
+/*内页*/
+.ny_menu em{width:160px;height:45px;line-height:45px;font-size:18px;top:-16px;right:14px;}
+.ny_menu i{width:98px; height:38px;top:-21px;right:18px}
+
+/*新闻*/
+.news_cont dl{height:110px;margin-bottom:18px;}
+.news_cont dt{width:138px;}
+.news_cont dt img{width:138px;height:110px;}
+.news_cont dd{left:138px;padding:8px 24px;width:-moz-calc(100% - 178px);width:-weblit-calc(100% - 178px);width:calc(100% - 178px);}
+.news_cont dd h3{font-size:20px; }
+.news_cont dd p{font-size:17px;}
+.news_cont dd p.news_date{font-size:13px;}
+
+
+}
+@media screen and (max-width:540px){
+.index_new dl dd p{height: 20px;}
+.index_new dl dd h5{font-size: 0.9rem;line-height: 1.4;}
+}
+
+@media screen and (max-width:360px){
+	
+}
+
+@media screen and (max-width:320px){
+.main{font-size:12px;}	
+
+}

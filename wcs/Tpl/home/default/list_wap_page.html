@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<title>{$jl_title}</title>
+<meta name="Keywords" content="{$jl_key}">
+<meta name="Description" content="{$jl_desc}">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
+<link rel="stylesheet" href="__BASE__/wap/css/css.css">
+<link rel="stylesheet" href="__BASE__/wap/css/iconfont.css">
+<link rel="stylesheet" href="__BASE__/wap/css/swiper.3.1.7.min.css">
+<script src="__BASE__/wap/js/jquery.js" type="text/javascript"></script>
+<script src="__BASE__/wap/js/jquery.SuperSlide.js" type="text/javascript"></script>
+<script src="__BASE__/wap/js/swiper.3.1.7.jquery.min.js"></script>
+</head>
+<body>
+<header>
+  <div class="top_black"><a href="javascript:window.history.go(-1);"><img src="__BASE__/wap/images/top_left.jpg" width="16" height="33"></a></div>
+  <div class="logotxt">{$arctype['name']}</div>
+  <include file='wcs/Tpl/home/default/wap_nav.html'/>
+</header>
+<?php
+    if($arctype['fid']==51){ 
+?>
+<div class="twocolumns">
+  <div class="swiper-wrapper">
+    <arctype typeid='$tid' type='brother' titlelen = '6' >
+     <div class="swiper-slide <if condition="$arctype['id'] eq $field['id']">on</if>"><a href="{$field['url']}">{$field['name']}</a></div>
+    </arctype>
+  </div>
+</div>
+<script>
+  var swiper = new Swiper('.twocolumns', {
+    freeMode : true,
+    slidesPerView : 'auto',
+  });
+</script>
+<?php
+    } 
+?>
+<section class="ny_banner"><img src="__BASE__/wap/images/about_pic.jpg" width="720" height="319"></section>
+<section class="ny_menu"><em>{$arctype['name']}</em><i></i></section>
+<!--内页内容-->
+<section class="ny_cont main">
+<div class="about">
+<?php
+    if($_GET['tid']==53){ //互通栏目进行对应
+      $typeid=7;   
+    }else if($_GET['tid']==55){
+       $typeid = 31;
+    }else if($_GET['tid']==56){
+       $typeid = 32;
+    }else if($_GET['tid']==57){
+       $typeid = 33;
+    }else if($_GET['tid']==58){
+       $typeid = 34;
+    }else if($_GET['tid']==59){
+       $typeid = 36;
+    }else if($_GET['tid']==60){
+       $typeid = 35;
+    }
+    $model = M("addpage");
+    $where["typeid"] = array('eq' ,$typeid);
+    $txt = $model->where($where)->getField("txt");
+?>
+{$txt}
+</div>
+</section>
+<include file='wcs/Tpl/home/default/wap_foot.html'/>
+</body>
+</html>

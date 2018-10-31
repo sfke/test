@@ -1,0 +1,897 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+
+	<meta charset="UTF-8">
+
+	<title>{$jl_title}</title>
+
+<meta name="Keywords" content="{$jl_key}">
+
+<meta name="Description" content="{$jl_desc}">
+
+	<meta name="renderer" content="webkit">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	
+    <meta name="baidu-site-verification" content="LoCsw67We5" />
+	
+	<link rel="icon" href="__BASE__/images/favicon.ico" type="image/x-icon"/>
+
+	<link rel="stylesheet" href="__BASE__/css/animate.min.css"/>
+
+	<link rel="stylesheet" href="__BASE__/css/common.css" />
+
+	<link rel="stylesheet" href="__BASE__/css/html5.css">
+
+	<link rel="stylesheet" href="__BASE__/css/jScrollPane.css" />
+
+    <!--[if lte IE 8]>
+
+	<script src="__BASE__/js/html5.js" type="text/javascript"></script>
+
+	<![endif]-->
+
+	<script type="text/javascript" src="__BASE__/js/jquery1.42.min.js"></script>
+
+	<script type="text/javascript" src="__BASE__/js/jquery.SuperSlide.2.1.1.js"></script>
+
+	<script type="text/javascript" src="__BASE__/js/common.js"></script>
+
+	<script type="text/javascript" src="__BASE__/js/jquery.mousewheel.js"></script>
+
+	<script type="text/javascript" src="__BASE__/js/jScrollPane.js"></script>
+
+	<script src="__BASE__/js/wow.min.js"></script>   
+
+</head>
+
+<body style="padding-top: 0;">
+
+<!--
+
+ __________  ___      __________  __________  _________  ___    ___
+
+/_________//__/    /_________//_________//________//__/  /__/
+
+___   ___/      ___   ___/   ______/   _____/   _   
+
+                           /____/           /__   
+
+    _         _____          ____/__   _____   ___    
+
+   /__        /____/         /_____/  /____/       
+
+   ______/    _______/  __/    ________/ _______/ __/  __/
+
+
+
+work at www.jltech.cn
+
+
+
+-->
+
+
+<div class="header_fix">
+	<div class="head-v3 head-v3_png">
+
+		<div class="navigation-up">
+
+			<div class="navigation-inner">
+
+				<h1 class="logo"><a href="{:siteUrl(1)}index.php"><img src="__BASE__/images/logo.png" alt=""></a></h1>
+
+				<h3 class="zq"><p>证券代码：</p>
+
+					<span>831331</span>
+
+				</h3>
+
+				<span class="searicon"><img src="__BASE__/images/seaicon.png" alt=""></span>
+
+				<div class="navigation-v3">
+
+					<ul>
+
+						<li class="nav-up-selected-inpage" _t_nav="home">
+
+							<h2>
+
+								<a href="{:siteUrl(1)}index.php">首页</a>
+
+							</h2>
+
+						</li>
+
+					  <arctype typeid='0' orderway='asc' row = '7' >
+
+				        <li class="<if condition="$arctype['fid'] eq $field['id'] or $arctype['id'] eq $field['id']">on</if>" _t_nav="p{$index+2}">
+
+							<h2>
+
+								<a href="{$field['url']}">{$field['name']}</a>
+
+							</h2>
+
+						</li>
+
+	                  </arctype>
+
+						
+
+					 
+
+					</ul>
+
+				</div>
+
+		
+
+			</div>
+
+		</div>
+
+			<div class="search search2">
+
+			   <form action="{:U('commonform/search/')}" method="post">
+
+	    <input type="hidden" name="type" value="1"/>
+
+		<p><input type="text" name="key" id="" placeholder="请输入搜索关键字"><input type="submit" value="搜索"><img src="__BASE__/images/cloase.jpg" alt="" class="close_sear"></p>
+
+	   </form>
+
+				
+
+			</div>
+
+
+
+		<div class="navigation-down">
+
+		   <arctype typeid='0' orderway='asc' row = '7' >
+
+		    <if condition="$field['id'] neq 4 and $field['id'] neq 7">
+
+		     <div id="p{$index+2}" class="nav-down-menu <if condition="$index neq 0">menu-3</if> menu-1" style="display: none;" _t_nav="p{$index+2}">
+
+				<div class="navigation-down-inner">
+
+	            <arctype typeid="$field['id']" titlelen = '20' field="field2" indez="index2">
+
+	                     <a href="{$field2['url']}">{$field2['name']}</a>			
+
+	            </arctype>  
+
+			    </div>
+
+			 </div>
+
+			</if>
+
+	       </arctype>
+
+		 
+
+		</div>
+
+	</div>
+</div>
+
+
+<script>
+
+$(document).ready(function(event){
+
+      $('.searicon').click(function() {	       	
+
+		$('.search').slideDown();
+
+	   	return false;
+
+    });
+
+
+
+  $(".search").click(function(event) {
+
+		var e = event || window.event;  
+
+		if(e.stopPropagation) { //W3C阻止冒泡方法  
+
+	        e.stopPropagation();  
+
+	    } else {
+
+	        e.cancelBubble = true; //IE阻止冒泡方法
+
+	    }  
+
+	});
+
+  
+
+  $(document).click(function(event){
+
+	$(".search").slideUp();
+
+  })
+
+  $('.close_sear').click(function(event) {
+
+  	$('.search').slideUp(300);
+
+  });
+
+  
+
+})
+
+jQuery(document).ready(function(){
+
+	var qcloud={};
+
+	$('[_t_nav]').hover(function(){
+
+		var _nav = $(this).attr('_t_nav');
+
+		clearTimeout( qcloud[ _nav + '_timer' ] );
+
+		qcloud[ _nav + '_timer' ] = setTimeout(function(){
+
+		$('[_t_nav]').each(function(){
+
+		$(this)[ _nav == $(this).attr('_t_nav') ? 'addClass':'removeClass' ]('nav-up-selected');
+
+		});
+
+		$('#'+_nav).stop(true,true).slideDown(200);
+
+		}, 150);
+
+	},function(){
+
+		var _nav = $(this).attr('_t_nav');
+
+		clearTimeout( qcloud[ _nav + '_timer' ] );
+
+		qcloud[ _nav + '_timer' ] = setTimeout(function(){
+
+		$('[_t_nav]').removeClass('nav-up-selected');
+
+		$('#'+_nav).stop(true,true).slideUp(200);
+
+		}, 150);
+
+	});
+
+});
+
+</script>
+
+<!-- header -->
+
+
+
+<div id="slideBox" class="slideBox clearfix">
+
+	<div class="hd">
+
+		<ul></ul>
+
+	</div>
+
+	<div class="bd">
+
+		<ul>
+
+           <loop typeid="40" table="addiframe" where="status=1" orderby="sortrank" orderway="desc">
+
+			<li><a href="{$field['src']}" style="background: url({$field['img']}) center center no-repeat;-webkit-background-size: cover;background-size: cover;"></a></li>
+
+           </loop>
+
+		 
+
+		</ul>
+
+	</div>
+
+</div>
+
+
+
+<script type="text/javascript">
+
+jQuery(".slideBox").slide({titCell:".hd ul",mainCell:".bd ul",autoPlay:true,autoPage:"true",effect:'fold'});
+
+</script>
+
+<div class="index_one clearfix">
+
+		<div class="txtScroll-left">
+
+			<a href="{:listUrl(8)}"><img src="__BASE__/images/jia.jpg" alt=""></a>
+
+			<div class="hd">最新公告：</div>
+
+			<div class="bd">
+
+				<ul class="infoList">
+
+                   <arclist typeid="8" row="10" titlelen="36" addfield="on">
+
+					<li><a href="http://www.neeq.com.cn/disclosure/announcement.html?companyCode=831331" target="_blank">{$field['title']}</a></li>
+
+				   </arclist> 
+
+				</ul>
+
+			</div>
+
+		</div>
+
+
+
+		<script type="text/javascript">
+
+		 jQuery(".txtScroll-left").slide({titCell:".hd ul",mainCell:".bd ul",autoPage:true,effect:"topLoop",autoPlay:true,scroll:1,vis:1,trigger:"click"});
+
+		</script>
+
+		<div class="one_box">
+
+				<a class="next"></a>
+
+				<a class="prev"></a>
+
+			<div class="bd">
+
+				<ul class="picList">
+
+					<li>
+
+						<a href="{:listUrl(5)}"><span class="one_1"></span><i>安防运营服务</i></a>
+
+					</li>
+
+					<li>
+
+						<a href="{:listUrl(6)}"><span class="one_2"></span><i>智慧城市建设</i></a>
+
+					</li>
+
+					<li>
+
+						<a href="http://www.huaaotech.com/index.php/index-view-aid-20.html"><span class="one_3"></span><i>光谷微警务</i></a>
+
+					</li>
+ 					<li>
+
+						<a href="http://www.huaaotech.com/index.php/index-view-aid-289.html"><span class="one_5"></span><i>阳光微警务</i></a>
+
+					</li>
+					<li>
+
+						<a href="http://www.huaaotech.com/index.php/index-view-aid-314.html"><span class="one_6"></span><i>平安校园直通车</i></a>
+
+					</li>
+
+					<li>
+
+						<a href="{:listUrl(36)}"><span class="one_4"></span><i>自助服务设备</i></a>
+
+					</li>
+
+					
+
+				</ul>
+
+			</div>
+
+		</div>
+
+
+
+		<script type="text/javascript">
+
+		jQuery(".one_box").slide({mainCell:".bd ul",autoPage:true,effect:"leftLoop",vis:4,trigger:"click"});
+
+		</script>
+
+
+
+</div>
+
+<!-- one -->
+
+<div class="index_two  clearfix">
+
+	<div class="two_box clearfix">
+
+		<div class="slideTxtBox wow fadeInUp">
+
+			<div class="two_l_tit">新闻中心</div>
+
+			<div class="hd">
+
+				<ul><!-- <li>媒体聚焦<span>/</span></li> --><li>新闻资讯<span>/</span></li><li>视频新闻</li></ul>
+
+			</div>
+
+			<div class="bd">
+
+				<!-- <ul>
+
+			<div id="demo3" class="picBtnTop_index clearfix">
+
+				<div class="bd2">
+
+					<ul>
+
+					   <arclist typeid="18" row="3" titlelen="36" desclen="180" addfield="on" flag="s">
+
+				        <li><a href="{$field['url']}"><img src="{$field['img']|default=$defaultimg}" /></a></li>
+
+			           </arclist>
+
+					</ul>
+
+				</div>
+
+				<div class="hd2">
+
+					<ul>
+
+						  <arclist typeid="18" row="3" titlelen="36" desclen="180" addfield="on" flag="s">
+
+							<li>
+
+								<dl>
+
+									<dt class="dt{$index+1}"></dt>
+
+									<dd>
+
+										<h5><span>{:jldate($field['pubdate'])}</span><a href="{$field['url']}">{$field['title']}</a></h5>
+
+										<p>{$field['desc']}</p>
+
+									</dd>
+
+								</dl>
+
+							</li>
+
+                          </arclist>
+
+					</ul>
+
+					<a href="{:listUrl(18)}" class="more"><img src="__BASE__/images/more.png" alt=""></a>
+
+				</div>
+
+			</div>
+
+
+
+				</ul> -->
+
+				<!-- 公司新闻 -->
+
+				<ul>
+
+			<div id="demo2" class="picBtnTop_index clearfix">
+
+				<div class="bd2">
+
+					<ul><!-- 502*327 -->
+
+                       <arclist typeid="17" row="3" titlelen="36" desclen="180" addfield="on" flag="s">
+
+				        <li><a href="{$field['url']}"><img src="{$field['img']|default=$defaultimg}" /></a></li>
+
+			           </arclist> 
+
+					 
+
+					</ul>
+
+				</div>
+
+				<div class="hd2">
+
+					<ul>
+
+                         <arclist typeid="17" row="3" titlelen="36" desclen="180" addfield="on" flag="s">
+
+							<li>
+
+								<dl>
+
+									<dt class="dt{$index+1}"></dt>
+
+									<dd>
+
+										<h5><span>{:jldate($field['pubdate'])}</span><a href="{$field['url']}">{$field['title']}</a></h5>
+
+										<p>{$field['desc']}</p>
+
+									</dd>
+
+								</dl>
+
+							</li>
+
+                          </arclist>
+
+					</ul>
+
+					<a href="{:listUrl(17)}" class="more"><img src="__BASE__/images/more.png" alt=""></a>
+
+				</div>
+
+			</div>
+
+	<!-- 公司新闻 -->
+
+				</ul>
+
+				<ul>
+
+			<div id="demo1" class="picBtnTop_index clearfix">
+
+				<div class="bd2">
+
+					<ul><!-- 502*327 -->
+
+                       <arclist typeid="19" row="3" titlelen="36" desclen="180" addfield="on" flag="s">
+
+				        <li><a href="{$field['url']}"><img src="{$field['img']|default=$defaultimg}" /></a></li>
+
+			           </arclist> 
+
+					 
+
+					</ul>
+
+				</div>
+
+				<div class="hd2">
+
+					<ul>
+
+                         <arclist typeid="19" row="3" titlelen="36" desclen="180" addfield="on" flag="s">
+
+							<li>
+
+								<dl>
+
+									<dt class="dt{$index+1}"></dt>
+
+									<dd>
+
+										<h5><span>{:jldate($field['pubdate'])}</span><a href="{$field['url']}">{$field['title']}</a></h5>
+
+										<p>{$field['desc']}</p>
+
+									</dd>
+
+								</dl>
+
+							</li>
+
+                          </arclist>
+
+					</ul>
+
+					<a href="{:listUrl(19)}" class="more"><img src="__BASE__/images/more.png" alt=""></a>
+
+				</div>
+
+			</div>
+
+ 
+
+				</ul>
+
+
+
+			</div>
+
+		</div>
+
+		<script type="text/javascript">
+
+		jQuery(".slideTxtBox").slide({effect:'left'});
+
+		jQuery("#demo2").slide({titCell:".hd2 li",mainCell:".bd2 ul",effect:"top",triggerTime:0 });
+
+		jQuery("#demo3").slide({titCell:".hd2 li",mainCell:".bd2 ul",effect:"top",triggerTime:0 });
+
+		jQuery("#demo1").slide({titCell:".hd2 li",mainCell:".bd2 ul",effect:"top",triggerTime:0 });
+
+		</script>
+
+	</div>
+
+</div>
+
+<!-- two 新闻中心-->
+
+<div class="index_three clearfix">
+
+		<div id="case" class="case">
+
+			<div class="hd"><span>经典案例</span>
+
+				<ul></ul>
+
+			</div>
+
+			<div class="bd">
+
+				<ul>
+
+				<li>
+
+                      <arclist typeid="3" limit="0,3" titlelen="24" addfield="on">
+
+						<a href="{$field['url']}" class="case{$index+1}"><span><img src="{$field['img']|default=$defaultimg}" alt=""><em>{$field['title']}</em></span></a>
+
+                      </arclist> 
+
+						<a href="javascript:void(0);" class="case4"><!--这个定死-->
+
+							<span>
+
+								<i class="pin1"><img src="__BASE__/images/pin1.png" alt=""></i>
+
+								<i class="pin2"><img src="__BASE__/images/pin2.png" alt=""></i>
+
+								<i class="pin3"><img src="__BASE__/images/pin3.png" alt=""></i>
+
+								<i class="pin4"><img src="__BASE__/images/pin4.png" alt=""></i>
+
+								<i class="pin5"><img src="__BASE__/images/pin5.png" alt=""></i>
+
+								<i class="pin6"><img src="__BASE__/images/pin6.png" alt=""></i>
+
+								<i class="pin7"><img src="__BASE__/images/pin7.png" alt=""></i>
+
+								<i class="pin8"><img src="__BASE__/images/pin8.png" alt=""></i>
+
+							</span>
+
+                        </a>
+
+					  <arclist typeid="3" limit="3,3" titlelen="24" addfield="on">
+
+						<a href="{$field['url']}" class="case{$index+5}"><span><img src="{$field['img']|default=$defaultimg}" alt=""><em>{$field['title']}</em></span></a>
+
+                      </arclist>
+
+					</li>
+
+					<!-- 第一屏所有图END -->
+
+					<li>
+
+						 <arclist typeid="3" limit="6,3" titlelen="24" addfield="on">
+
+						<a href="{$field['url']}" class="case{$index+1}"><span><img src="{$field['img']|default=$defaultimg}" alt=""><em>{$field['title']}</em></span></a>
+
+                      </arclist> 
+
+						<a href="javascript:void(0);" class="case4"><!--这个定死-->
+
+							<span>
+
+								<i class="pin1"><img src="__BASE__/images/pin1.png" alt=""></i>
+
+								<i class="pin2"><img src="__BASE__/images/pin2.png" alt=""></i>
+
+								<i class="pin3"><img src="__BASE__/images/pin3.png" alt=""></i>
+
+								<i class="pin4"><img src="__BASE__/images/pin4.png" alt=""></i>
+
+								<i class="pin5"><img src="__BASE__/images/pin5.png" alt=""></i>
+
+								<i class="pin6"><img src="__BASE__/images/pin6.png" alt=""></i>
+
+								<i class="pin7"><img src="__BASE__/images/pin7.png" alt=""></i>
+
+								<i class="pin8"><img src="__BASE__/images/pin8.png" alt=""></i>
+
+							</span>
+
+                        </a>
+
+					  <arclist typeid="3" limit="9,3" titlelen="24" addfield="on">
+
+						<a href="{$field['url']}" class="case{$index+5}"><span><img src="{$field['img']|default=$defaultimg}" alt=""><em>{$field['title']}</em></span></a>
+
+                      </arclist>
+
+					</li>
+
+					<!-- 第二屏所有图END -->
+
+					<li>
+
+					  <arclist typeid="3" limit="12,3" titlelen="24" addfield="on">
+
+						<a href="{$field['url']}" class="case{$index+1}"><span><img src="{$field['img']|default=$defaultimg}" alt=""><em>{$field['title']}</em></span></a>
+
+                      </arclist> 
+
+						<a href="javascript:void(0);" class="case4"><!--这个定死-->
+
+							<span>
+
+								<i class="pin1"><img src="__BASE__/images/pin1.png" alt=""></i>
+
+								<i class="pin2"><img src="__BASE__/images/pin2.png" alt=""></i>
+
+								<i class="pin3"><img src="__BASE__/images/pin3.png" alt=""></i>
+
+								<i class="pin4"><img src="__BASE__/images/pin4.png" alt=""></i>
+
+								<i class="pin5"><img src="__BASE__/images/pin5.png" alt=""></i>
+
+								<i class="pin6"><img src="__BASE__/images/pin6.png" alt=""></i>
+
+								<i class="pin7"><img src="__BASE__/images/pin7.png" alt=""></i>
+
+								<i class="pin8"><img src="__BASE__/images/pin8.png" alt=""></i>
+
+							</span>
+
+                        </a>
+
+					  <arclist typeid="3" limit="15,3" titlelen="24" addfield="on">
+
+						<a href="{$field['url']}" class="case{$index+5}"><span><img src="{$field['img']|default=$defaultimg}" alt=""><em>{$field['title']}</em></span></a>
+
+                      </arclist>
+
+					</li>
+
+					<!-- 第三屏所有图END -->
+
+
+
+			</div>
+
+									<a href="{:listUrl(20)}"> MORE> </a>
+
+		</div>
+
+
+
+		<script type="text/javascript">
+
+		jQuery(".case").slide({titCell:".hd ul",mainCell:".bd ul",autoPage:"true",effect:'leftLoop'});
+
+		$(document).ready(function(event){
+
+		    $('.case .bd ul li a').hover(function() {
+
+		    	$(this).find('em').stop().animate({bottom:'0'});
+
+		    }, function() {
+
+		    	$(this).find('em').stop().animate({bottom:'-50px'})
+
+		    });
+
+		  
+
+		})
+
+
+
+		</script>
+
+</div>
+
+<!-- 案例 -->
+
+<div class="index_four clearfix">
+
+	<div class="four_tit"><img src="__BASE__/images/lt.jpg" alt=""><span>荣誉客户</span></div>
+
+		<div class="honner">
+
+			<div class="hd">
+
+				<ul>
+
+				<arctype typeid='3' orderway='asc' row = '6' >
+
+                 <li>{$field['name']}</li>
+
+                </arctype>
+
+				</ul>
+
+			</div>
+
+			<div class="bd">
+
+			   <arctype typeid='3' orderway='asc' row = '6' >
+
+				<ul>
+
+					<li>
+
+					<h4>{$field['name']}</h4>
+
+					<h5>{$field['mdesc']}</h5>
+
+					<dl>
+
+						<dt><img src="{$field['litpic']}" alt=""></dt>
+
+						<dd id="hone{$index+1}"><!--展示不带链接-->
+
+							<div  class="hone">
+
+							   <arclist typeid="$field['id']" titlelen="15" field="field2" row="100">
+
+                                <span><a href="{$field2['url']}">{$field2['title']}</a></span>
+
+                               </arclist>
+
+							</div>
+
+						</dd>
+
+					</dl>
+
+					</li>
+
+				</ul>
+
+				</arctype>
+
+			</div>
+
+		</div>
+
+		<script type="text/javascript">
+
+		jQuery(".honner").slide({effect:"left"});
+
+		$('.honner .bd ul dl dd#hone1 .hone').jScrollPane({showArrows:true, arrowSize: 16});
+
+		$('.honner .bd ul dl dd#hone2 .hone').jScrollPane({showArrows:true, arrowSize: 16});
+
+		$('.honner .bd ul dl dd#hone3 .hone').jScrollPane({showArrows:true, arrowSize: 16});
+
+		$('.honner .bd ul dl dd#hone4 .hone').jScrollPane({showArrows:true, arrowSize: 16});
+
+		$('.honner .bd ul dl dd#hone5 .hone').jScrollPane({showArrows:true, arrowSize: 16});
+
+		$('.honner .bd ul dl dd#hone6 .hone').jScrollPane({showArrows:true, arrowSize: 16});
+
+		</script>
+
+
+
+
+
+</div>
+
+<!-- 运营 -->
+
+
+
+<include file='wcs/Tpl/home/default/footer.html'/>	
+
+</body>
+
+</html>

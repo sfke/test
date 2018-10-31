@@ -1,0 +1,309 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>CMS</title>
+<link href="__CSS__/common.css" rel="stylesheet"/>
+<link href="__CSS__/right.css" rel="stylesheet"/>
+<link rel="stylesheet" href="__INC__/form/css/zebra_form.css" type="text/css">
+<link href="__CSS__/ui/jquery-ui.css" type="text/css" rel="stylesheet"/>
+<script type="text/javascript" language="javascript" src="__JS__/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="__JS__/ui/jquery-ui-datepicker.js"></script>
+<script src="__JS__/highstock/highstock.js"></script>
+<script src="__JS__/highstock/exporting.js"></script>
+
+<script type="text/javascript">
+var tid = '{$param.tid}',
+        sid = '{$param.sid}',
+        sdate = '{$param.sdate}',
+        edate = '{$param.edate}',
+        arctypejson = {$param.tjson},
+        colors = [
+            '#2f7ed8',
+            '#8bbc21',
+            '#910000',
+            '#1aadce',
+            '#492970',
+            '#f28f43',
+            '#77a1e5',
+            '#c42525',
+            '#a6c96a',
+            '#E43E3E',
+            '#E49C3E',
+            '#C9C931',
+            '#F9C931',
+            '#FF00AE'
+        ];
+//colors = Highcharts.getOptions().colors;
+
+Highcharts.setOptions({
+    lang: {
+        months: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一', '十二'],
+        shortMonths: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+        weekdays: ['星期天', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'],
+        rangeSelectorZoom: '时间段'
+    },
+    colors: colors
+});
+
+$(function () {
+    var seriesOptions = [],
+            yAxisOptions = [],
+            lines = [],
+            linestype = "column",//spline,column
+            seriesCounter = 0;
+
+    function parseParam() {
+
+        linestype = "spline";       //多个栏目
+        $.each(arctypejson, function (i, arctype) {
+            var line = {};
+            line.name = arctype.name;
+            line.tid = arctype.id;
+            lines.push(line);
+        });
+    }
+
+    function createChart() {
+        $('#container').highcharts('StockChart', {
+            chart: {
+            },
+            tooltip: {
+                pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.change}%)<br/>',
+                valueDecimals: 2
+            },
+            credits: {
+                enabled: false
+            },
+            rangeSelector: {
+                // 缩放选择按钮，是一个数组。
+                // 其中type可以是： 'millisecond', 'second', 'minute', 'day', 'week', 'month', 'ytd' (year to date), 'year' 和 'all'。
+                // 其中count是指多少个单位type。
+                // 其中text是配置显示在按钮上的文字
+                buttons: [
+                    {
+                        type: 'week',
+                        count: 1,
+                        text: '1周'
+                    },
+                    {
+                        type: 'month',
+                        count: 1,
+                        text: '1月'
+                    },
+                    {
+                        type: 'month',
+                        count: 3,
+                        text: '3月'
+                    },
+                    {
+                        type: 'month',
+                        count: 6,
+                        text: '6月'
+                    },
+                    {
+                        type: 'year',
+                        count: 1,
+                        text: '1年'
+                    },
+                    {
+                        type: 'year',
+                        count: 3,
+                        text: '3年'
+                    },
+                    {
+                        type: 'all',
+                        text: '所有'
+                    }
+                ],
+                // 默认选择域：0（缩放按钮中的第一个）、1（缩放按钮中的第二个）……
+                selected: 6,
+                // 是否允许input标签选框
+                inputEnabled: false
+            },
+
+            /**
+             * 气泡示说明标签
+             *
+             * @param {string} xDateFormat 日期时间格式化
+             */
+            tooltip: {
+                // 日期时间格式化
+                xDateFormat: '%Y-%m-%d %A'
+            },
+
+            /**
+             * X轴坐标配置
+             *
+             * @param {object} dateTimeLabelFormats x轴日期时间格式化，不用修改直接使用
+             */
+            xAxis: {
+                // 如果X轴刻度是日期或时间，该配置是格式化日期及时间显示格式
+                dateTimeLabelFormats: {
+                    second: '%Y-%m-%d',
+                    minute: '%Y-%m-%d',
+                    hour: ' ',
+                    day: '%Y-%m-%d',
+                    week: '%Y-%m-%d',
+                    month: '%Y-%m',
+                    year: '%Y'
+                }
+            },
+            plotOptions: {
+                line: {
+                    lineWidth: 1
+                }
+            },
+            series: seriesOptions,
+            title: {
+                text: "{$param['title']}（{$param['dateinfo']}）"
+            }
+        });
+    }
+    parseParam();
+    $.each(lines, function (i, line) {
+        $.getJSON("{:U('statistics/getDataJson')}", {tid: line.tid, sid: sid, sdate: sdate, edate: edate}, function (data) {
+            seriesOptions[i] = {
+                name: line.name,
+                data: data,
+                type: linestype
+            };
+            seriesCounter++;
+            if (seriesCounter == lines.length) {
+                createChart();
+            }
+        });
+    });
+});
+
+/*
+ function flush(){
+
+ var chart = $('#container').highcharts();
+
+ $.getJSON("{:U('statistics/getPvJson')}",{type:'outside',tid:tid,sid:sid},function(data){
+
+ $temp = {
+ name: namesmap[name],
+ data: data
+ };
+ seriesOptions.push($temp);
+
+
+ createChart();
+ });
+
+ }
+
+ */
+
+
+/*        $(function() {
+
+ $.each(names, function(i, name) {
+
+ $.getJSON("{:U('statistics/getPvJson')}",{type:name,tid:tid,sid:sid},function(data) {
+
+ seriesOptions[i] = {
+ name: namesmap[name],
+ data: data,
+ type:'column'
+ };
+
+ seriesCounter++;
+
+ if (seriesCounter == names.length) {
+ createChart();
+ }
+ });
+ });
+ });
+
+ */
+</script>
+</head>
+<body>
+<!--右侧区域 begin-->
+<div class="right">
+    <!--当前位置 begin-->
+    <include file='common:crumbs'/>
+    <!--当前位置 end-->
+    <!--主体区域 begin-->
+    <div class="container">
+        <div class="alert_div">
+            <h4 class="alert_info"><span class="welcome">{$welcome}</span>您现在的位置是：{$current} </h4>
+            <h4 class="alert_what" style="display:none;"></h4>
+        </div>
+        <!--样式一 begin-->
+        <div class="stats">
+            <div class="lm_title">
+                <div class="lm_title_l"><em>操作面板</em></div>
+            </div>
+            <div class="lm_content">
+                <div id="panel">
+                    <div class="infos_left">
+                        <table class="Zebra_Form">
+                            <tr class="row">
+                                <form action='' method="get" id="form">
+                                    <td><label>站点:</label></td>
+                                    <td>
+                                        <select name="sid" onchange="changeSite(this.value)">
+                                            {$siteOptions}
+                                        </select>
+                                    </td>
+                                    <td><label>栏目:</label></td>
+                                    <td>
+                                        <select name="tid" onchange="changeType()">
+                                            {$arctypeOptions}
+                                        </select>
+                                    </td>
+                                    <td><label>开始时间:</label></td>
+                                    <td><input type="text" name="sdate" id="sdate" value="{$param['sdate']}" class="text date" readonly/></td>
+                                    <td><label>结束时间:</label></td>
+                                    <td><input type="text" name="edate" id="edate" value="{$param['edate']}" class="text date" readonly/></td>
+                                    <td><input type="submit" class="button" value="确定"/></td>
+                                </form>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <div class="lm_bottom">
+                <div class="lm_bottom_l"><em></em></div>
+            </div>
+        </div>
+        <!--样式一 end-->
+        <!--样式一 begin-->
+        <div class="stats">
+            <div class="lm_title">
+                <div class="lm_title_l"><em>{$current}</em></div>
+            </div>
+            <div class="lm_content">
+                <div id="container" style="height: 430px; min-width:800px"></div>
+            </div>
+            <div class="lm_bottom">
+                <div class="lm_bottom_l"><em></em></div>
+            </div>
+        </div>
+        <!--样式一 end-->
+    </div>
+    <!--主体区域 end-->
+</div>
+<!--右侧区域  end-->
+</body>
+<script>
+    $(function () {
+        $(".date").datepicker({yearRange: "2012:2050", maxDate: "+0m+0d", minDate: ""});
+    });
+
+    function changeType() {
+        $("#form").submit();
+    }
+
+    function changeSite(sid) {
+        $("select[name='tid'] option[value='" + 0 + "']").attr("selected", "selected");
+        changeType();
+    }
+</script>
+</html>

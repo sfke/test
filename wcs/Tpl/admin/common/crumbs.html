@@ -1,0 +1,33 @@
+<script type="text/javascript">
+        $(function(){
+            $("#hideleft").toggle(function(){
+                $(this).html("显示菜单");
+                $(parent.ContentFrame).attr("cols","0,*");
+            }, function(){
+                $(this).html("隐藏菜单");
+                $(parent.ContentFrame).attr("cols","280,*");
+            });
+            $("#hideup").toggle(function(){
+                $(this).html("显示导航");
+                $(parent.MainFrame).attr("rows","0,*");
+            }, function(){
+                $(this).html("隐藏导航");
+                $(parent.MainFrame).attr("rows","90,*");
+            });
+        });
+        window.onload=function(){
+            var height=document.documentElement.clientHeight-35;
+            $(".container").height(height);
+        }
+    </script>
+    <div class="weizhi" style="position:fixed; top:0; left:0; width:100%; _position:absolute; _top:expression(eval(document.documentElement.scrollTop+ (parseInt(this.currentStyle.marginTop,10)||0)));overflow:hidden; ">
+        <div class="weizhi_shadow">
+            <div class="wz_left"></div>
+            <div class="wz_middle">
+                {$position}
+            </div>
+            <div class="wz_right"></div>
+            <div class="wz_more"> {:getMoreInfo()}</div>
+            <div class="clear"></div>
+        </div>
+    </div>

@@ -1,0 +1,1 @@
+<?php	return array ( 0 => 'mid', 1 => 'siteid', 2 => 'write', 3 => 'read', 4 => 'check', 5 => 'type', '_autoinc' => false, '_pk' => 'type', '_type' => array ( 'mid' => 'smallint(6) unsigned', 'siteid' => 'smallint(3)', 'write' => 'text', 'read' => 'text', 'check' => 'text', 'type' => 'tinyint(1) unsigned', ), );?>

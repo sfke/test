@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title></title>
+    <style>
+        #center {
+            margin: 50px auto;
+            width: 400px;
+        }
+        #loading {
+            width: 397px;
+            height: 49px;
+            background: url(__IMG__/bak.png) no-repeat;
+        }
+        #loading div {
+            width: 0px;
+            height: 48px;
+            background: url(__IMG__/pro.png) no-repeat;
+            color: #fff;
+            text-align: center;
+            font-family: Tahoma;
+            font-size: 18px;
+            line-height: 48px;
+        }
+        #message {
+            height: 35px;
+            font-family: Tahoma;
+            font-size: 12px;
+            line-height: 35px;
+            text-align: left;
+            margin-bottom: 10px;
+    </style>
+    <script type="text/javascript" src="__JS__/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript">
+        var progress_id = "loading";
+        var local_file_hash_arr;
+        var local_checkinfo_arr;
+        function SetProgress(progress) {
+            if (progress) {
+                showMsg(progress);
+                $("#" + progress_id + " > div").css("width", String(progress) + "%"); //控制#loading div宽度
+                $("#" + progress_id + " > div").html(String(progress) + "%"); //显示百分比
+            }
+        }
+        var i = 0;
+        function doProgress() {
+            if (i > 100) {
+                checkLocalDbFileHash();
+                //$("#message").html("加载完毕！").fadeIn("slow");//加载完毕提示
+                return;
+            }
+            if (i <= 100) {
+                setTimeout("doProgress()", parseInt(100 * Math.random()));
+                SetProgress(i);
+                i++;
+            }
+        }
+
+        function showMsg(n) {
+            if (n > local_file_hash_arr.length) n = parseInt(local_file_hash_arr.length * Math.random());
+            var filename = local_file_hash_arr[n];
+            $("#message").html(filename);
+
+        }
+
+        function showCheckinfo() {
+            var len = local_checkinfo_arr.length;
+            for (var i = 0; i < len; i++) {
+                var type = "";
+                switch (local_checkinfo_arr[i]['type']) {
+                    case '1' :
+                        type = "被篡改";
+                        break;
+                    case '2':
+                        type = "有补丁";
+                        break;
+                    case '3' :
+                        type = "未知文件";
+                        break;
+                    default:
+                        type = "??";
+                }
+                $("#checkinfo").append('<li>' + local_checkinfo_arr[i]['file'] + type + '</li>');
+            }
+        }
+    </script>
+</head>
+<body>
+<div id="center">
+    <div id="message"></div>
+    <div id="loading">
+        <div></div>
+    </div>
+    <ul id="checkinfo"></ul>
+</div>
+<input type="button" id="onkey" value="一键修复" style="display:none;" onclick="checkLocalDbFileHash();"></input>
+</body>
+<script>
+    $(function () {
+        getLocalDbFileHash();
+    });
+
+    function getLocalDbFileHash() {
+        $.post("__GROUP__/commonajax/getLocalHash", "{}", function (data) {
+            if (data == -1) {
+                alert("123");
+            } else {
+                local_file_hash_arr = eval(data);
+                doProgress();
+            }
+        })
+    }
+
+    function checkLocalDbFileHash() {
+        $.post("__GROUP__/commonajax/checkLocalHash", "{}", function (data) {
+            if (data == -1) {
+                alert("初始化体检失败！");
+            } else if (data == 1) {
+                alert("体检没有任何问题");
+            } else {
+                local_checkinfo_arr = eval(data);
+                showCheckinfo();
+            }
+        });
+    }
+</script>
+</html>

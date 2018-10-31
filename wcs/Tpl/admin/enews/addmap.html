@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>编辑锚点</title>
+<style type="text/css">
+    body, td, th {
+        font-size: 12px;
+    }
+    body {
+        margin-left: 0px;
+        margin-top: 0px;
+        margin-right: 0px;
+        margin-bottom: 0px;
+    }
+    /* Required CSS classes: must be included in all pages using this script */
+    /* Apply the element you want to drag/resize */
+    .drsElement {
+        position: absolute;
+        border: 3px solid #C00;
+    }
+    /*
+     The main mouse handle that moves the whole element.
+     You can apply to the same tag as drsElement if you want.
+    */
+    .drsMoveHandle {
+        height: 20px;
+        cursor: move;
+    }
+    /*
+     The DragResize object name is automatically applied to all generated
+     corner resize handles, as well as one of the individual classes below.
+    */
+    .dragresize {
+        position: absolute;
+        width: 5px;
+        height: 5px;
+        font-size: 1px;
+        background: #EEE;
+        border: 1px solid #333;
+    }
+    /*
+     Individual corner classes - required for resize support.
+     These are based on the object name plus the handle ID.
+    */
+    .dragresize-tl {
+        top: -8px;
+        left: -8px;
+        cursor: nw-resize;
+    }
+    .dragresize-tm {
+        top: -8px;
+        left: 50%;
+        margin-left: -4px;
+        cursor: n-resize;
+    }
+    .dragresize-tr {
+        top: -8px;
+        right: -8px;
+        cursor: ne-resize;
+    }
+    .dragresize-ml {
+        top: 50%;
+        margin-top: -4px;
+        left: -8px;
+        cursor: w-resize;
+    }
+    .dragresize-mr {
+        top: 50%;
+        margin-top: -4px;
+        right: -8px;
+        cursor: e-resize;
+    }
+    .dragresize-bl {
+        bottom: -8px;
+        left: -8px;
+        cursor: sw-resize;
+    }
+    .dragresize-bm {
+        bottom: -8px;
+        left: 50%;
+        margin-left: -4px;
+        cursor: s-resize;
+    }
+    .dragresize-br {
+        bottom: -8px;
+        right: -8px;
+        cursor: se-resize;
+    }
+</style>
+<script type="text/javascript" src="__INC__/form/js/jquery-1.7.js"></script>
+<script type="text/javascript" src="__INC__/layer/dragresize.js"></script>
+<script type="text/javascript" src="__INC__/layer/layer.min.js"></script>
+<script type="text/javascript">
+    var dragresize = new DragResize('dragresize', { minWidth: 50, minHeight: 50, minLeft: 0, minTop: 0, maxLeft: 550, maxTop: 655 });
+        dragresize.isElement = function (elm) {
+            if (elm.className && elm.className.indexOf('drsElement') > -1) return true;
+        };
+        dragresize.isHandle = function (elm) {
+            if (elm.className && elm.className.indexOf('drsMoveHandle') > -1) return true;
+        };
+        dragresize.ondragfocus = function () {};
+        dragresize.ondragstart = function (isResize) {};
+        dragresize.ondragmove = function (isResize) {};
+        dragresize.ondragend = function (isResize) {
+            var pos = $(".drsElement").position();
+            var coord = pos.left + "," + pos.top + "," + $("#cheng").width() + "," + $("#cheng").height();
+            var mapCoord = pos.left + "," + pos.top + "," + (pos.left + $("#cheng").width()) + "," + (pos.top + $("#cheng").height());
+            $("#jl_Coordinate").val(mapCoord);
+        };
+        dragresize.ondragblur = function () {};
+        dragresize.apply(document);
+</script>
+</head>
+<body>
+<input name="jl_Coordinate" id="jl_Coordinate" type="hidden"/>
+<img src="{$photo}" width="368" height="507" />
+<div id="cheng" class="drsElement drsMoveHandle" style=" position:absolute;left: 150px; top: 280px; width: 100px; height: 100px; color:#FFF; text-align: center; ">
+    1、请点击调整大小并移动<br/>
+    2、点击确定回调锚点坐标
+</div>
+<p align="center">
+    <input type="button" class="submit" id="clickYes" value="确定" onClick="yes()"/>&nbsp;&nbsp;
+    <input type="button" class="reset" id="clickNo" value="取消" onclick="no()"/>
+</p>
+</body>
+</html>
+<script type="text/javascript">
+    function yes() {
+        var coor = document.getElementById('jl_Coordinate').value;
+        var arr = new Array();
+        arr = coor.split(",");         //将字符串转成数组
+        //去掉小数点
+        for (var i = 0; i < arr.length; i++) {
+            arr[i] = parseInt(arr[i]);
+        }
+        //将小数转换成整数
+        coor = arr.join(",");
+        console.log(coor);
+        parent.map(coor);
+
+        var index = parent.layer.getFrameIndex(window.name);
+        parent.layer.close(index); //执行关闭
+    }
+
+    function no() {
+        var index = parent.layer.getFrameIndex(window.name);
+        parent.layer.close(index); //执行关闭
+    }
+</script>

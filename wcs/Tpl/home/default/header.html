@@ -1,0 +1,192 @@
+<div class="header_fix">
+	<div class="head-v3">
+
+	<div class="navigation-up">
+
+		<div class="navigation-inner">
+
+			<h1 class="logo"><a href="{:siteUrl(1)}index.php"><img src="__BASE__/images/logo2.jpg" alt=""></a></h1>
+
+			<h3 class="zq zq2"><p>证券代码：</p>
+
+				<span>831331</span>
+
+			</h3>
+
+			<span class="searicon"><img src="__BASE__/images/seaicon2.jpg" alt=""></span>
+
+			<div class="navigation-v3">
+
+				<ul>
+
+					<li _t_nav="home">
+
+						<h2>
+
+							<a href="{:siteUrl(1)}index.php">首页</a>
+
+						</h2>
+
+					</li>
+
+				  <arctype typeid='0' orderway='asc' row = '7' >
+
+			        <li class="<if condition="$arctype['fid'] eq $field['id'] or $arctype['id'] eq $field['id']">on</if>" _t_nav="p{$index+2}">
+
+						<h2>
+
+							<a href="{$field['url']}">{$field['name']}</a>
+
+						</h2>
+
+					</li>
+
+                  </arctype>
+
+					
+
+				 
+
+				</ul>
+
+			</div>
+
+			<div class="search">
+
+				 <form action="{:U('commonform/search/')}" method="post">
+
+    <input type="hidden" name="type" value="1"/>
+
+	<p><input type="text" name="key" id="" placeholder="请输入搜索关键字"><input type="submit" value="搜索"><img src="__BASE__/images/cloase.jpg" alt="" class="close_sear"></p>
+
+   </form>
+
+			</div>
+
+	
+
+		</div>
+
+	</div>
+
+	<div class="navigation-down">
+
+	  <arctype typeid='0' orderway='asc' row = '7' >
+
+	    <if condition="$field['id'] neq 4 and $field['id'] neq 7">
+
+	     <div id="p{$index+2}" class="nav-down-menu <if condition="$index neq 0">menu-3</if> menu-1" style="display: none;" _t_nav="p{$index+2}">
+
+			<div class="navigation-down-inner">
+
+            <arctype typeid="$field['id']" titlelen = '20' field="field2" indez="index2">
+
+                     <a href="{$field2['url']}">{$field2['name']}</a>			
+
+            </arctype>  
+
+		    </div>
+
+		 </div>
+
+		</if>
+
+       </arctype>
+
+	</div>
+
+	</div>
+</div>
+
+
+<script>
+
+$(document).ready(function(event){
+
+      $('.searicon').click(function() {	       	
+
+		$('.search').slideDown();
+
+	   	return false;
+
+    });
+
+
+
+  $(".search").click(function(event) {
+
+		var e = event || window.event;  
+
+		if(e.stopPropagation) { //W3C阻止冒泡方法  
+
+	        e.stopPropagation();  
+
+	    } else {
+
+	        e.cancelBubble = true; //IE阻止冒泡方法
+
+	    }  
+
+	});
+
+  
+
+  $(document).click(function(event){
+
+	$(".search").slideUp();
+
+  })
+
+  $('.close_sear').click(function(event) {
+
+  	$('.search').slideUp(300);
+
+  });
+
+  
+
+})
+
+jQuery(document).ready(function(){
+
+	var qcloud={};
+
+	$('[_t_nav]').hover(function(){
+
+		var _nav = $(this).attr('_t_nav');
+
+		clearTimeout( qcloud[ _nav + '_timer' ] );
+
+		qcloud[ _nav + '_timer' ] = setTimeout(function(){
+
+		$('[_t_nav]').each(function(){
+
+		$(this)[ _nav == $(this).attr('_t_nav') ? 'addClass':'removeClass' ]('nav-up-selected');
+
+		});
+
+		$('#'+_nav).stop(true,true).slideDown(200);
+
+		}, 150);
+
+	},function(){
+
+		var _nav = $(this).attr('_t_nav');
+
+		clearTimeout( qcloud[ _nav + '_timer' ] );
+
+		qcloud[ _nav + '_timer' ] = setTimeout(function(){
+
+		$('[_t_nav]').removeClass('nav-up-selected');
+
+		$('#'+_nav).stop(true,true).slideUp(200);
+
+		}, 150);
+
+	});
+
+});
+
+</script>
+
+ 

@@ -1,0 +1,241 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>CMS</title>
+<link href="__CSS__/common.css" rel="stylesheet"/>
+<link href="__CSS__/right.css" rel="stylesheet"/>
+<link rel="stylesheet" href="__INC__/form/css/zebra_form.css" type="text/css">
+<script type="text/javascript" language="javascript" src="__JS__/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" language="javascript" src="__JS__/FusionCharts.js"></script>
+<script type="text/javascript" language="javascript" src="__JS__/common.js"></script>
+<script type="text/javascript" language="javascript">
+    $(document).ready(function () {
+        $(".table_list tr").mouseover(function () {
+            $(this).addClass("one");
+        })
+        $(".table_list tr").mouseout(function () {
+            $(this).removeClass("one");
+        })
+    });
+</script>
+<style type="text/css">
+    .one {
+        background: #fcfcfc;
+    }
+</style>
+<style type="text/css">
+    #panel {
+        width: 100%;
+    }
+
+    .infos_left {
+        float: left;
+        width: 700px;
+    }
+
+    .infos_right {
+        width: 150px;
+        float: right;
+        margin-right: 150px;
+    }
+
+    .category td {
+        border-bottom: 1px dotted #CCC;
+        border-width: 1px 0;
+    }
+</style>
+</head>
+<body>
+<!--右侧区域 begin-->
+<div class="right">
+    <!--当前位置 begin-->
+    <include file='common:crumbs'/>
+    <!--当前位置 end-->
+    <!--主体区域 begin-->
+    <div class="container">
+        <div class="alert_div">
+            <h4 class="alert_info"><span class="welcome">{$welcome}</span>您现在的位置是：{$current} </h4>
+            <h4 class="alert_what" style="display:none;"></h4>
+        </div>
+        <!--样式二 begin-->
+        <div class="stats">
+            <div class="lm_title">
+                <div class="lm_title_l">
+                    <em><img src="__IMG__/add_btn.jpg" style="float:right;margin-right:30px;" onclick="add();"/>{$current}</em>
+                </div>
+            </div>
+            <div class="lm_table">
+                <table cellpadding="0" cellspacing="0" width="100%"
+                       class="table_list">
+                    <tr class="title" align="center">
+                        <td>&nbsp;</td>
+                        <td align="left" style="text-align:left;">商品类别</td>
+                        <td>商品数量</td>
+                        <td>排序</td>
+                        <td>操作</td>
+                    </tr>
+                    <volist name='list' id='category'>
+                        <!--tr class="tr_line">
+                            <td colspan="10"><div></div></td>
+                        </tr-->
+                        <tr align="left" class="category" name="{$category['class']}">
+                            <td>&nbsp;&nbsp;&nbsp;</td>
+                            <td style="padding-left:{$category['grade']*2}0px;" align="left">
+                                <if condition="$category['isParent'] == 1 ">
+                                    <img src="__IMG__/close.png" width="12" style="margin-right:10px;" _status="1" onclick="showSon(this,{$category['id']},'{$category['class']}');"/>
+                                <else/>
+                                    <img src="__IMG__/none.png" width="12" style="margin-right:10px;" />
+                                </if>
+                                &nbsp;<a href="__GROUP__/goods/show?tid={$category['id']}">{$category['name']}</a></td>
+                            <td>{:getGoodsNumByCatid($category['id'])}</td>
+                            <td><a href="javascript:void(0);" onclick="changeOrder('{$category['id']}','{$category['order']}','{$category['fid']}','up');" style=" cursor:hand;"><img src="__IMG__/up.png" style="width:15px; height:20px;"/></a>
+                                <a href="javascript:void(0);" onclick="changeOrder('{$category['id']}','{$category['order']}','{$category['fid']}','down');" style=" cursor:hand;"><img src="__IMG__/down.png" style="width:15px; height:20px;"/></a>
+                            </td>
+                            <td width="120px"><a href="edit?catid={$category['id']}&fid={$category['fid']}">修改</a> <a href="javascript:void(0)" onclick="delArctype({$category['id']})">删除</a></td>
+                        </tr>
+                    </volist>
+                </table>
+            </div>
+            <div class="lm_table_bottom">
+                <div class="lm_table_bottom_l">
+                    <em>
+                    </em>
+                </div>
+            </div>
+        </div>
+        <!--样式二 end-->
+    </div>
+    <!--主体区域 end-->
+</div>
+<!--右侧区域  end-->
+
+<!--弹出层一 begin-->
+<div class="arctypeSelect popupPanel">
+    <div class="stats">
+        <div class="lm_title">
+            <div class="lm_title_l"><em>请选择要移动到的栏目！</em></div>
+        </div>
+        <div class="lm_content">
+            <table class="Zebra_Form" style="width:100%">
+                <form action="{:U('form/arctypemove')}" method="post">
+                    <input type="hidden" name="oldtid" value="{$tid}"/>
+                    <input type="hidden" class="items" name="items" value=""/>
+                    <tr class="row">
+                        <td>
+                            <select name="totid" id="movetoselect">
+                                {$selection_html}
+                            </select>
+                        </td>
+                        <td><input type="submit" class="button" value="移动"/></td>
+                        <td><input type="button" class="button" onclick="panelClose('arctypeSelect')" value="取消"/></td>
+                    </tr>
+                </form>
+            </table>
+        </div>
+        <div class="lm_bottom">
+            <div class="lm_bottom_l"><em></em></div>
+        </div>
+    </div>
+</div>
+<!--弹出层一 end-->
+
+<!--弹出层二begin-->
+<div class="arctypeDel popupPanel">
+    <div class="stats">
+        <div class="lm_title">
+            <div class="lm_title_l"><em>确定要删除这些栏目?</em></div>
+        </div>
+        <div class="lm_content">
+            <table class="Zebra_Form" style="width:100%;">
+                <tr class="row">
+                    <td width="60"><label>已选ID：</label></td>
+                    <input type="hidden" id="delitems" value=""></input>
+                    <td colspan="2" id="del_items"><label style="color:#FF00AE;"></label></td>
+                </tr>
+                <tr class="row">
+                    <td></td>
+                    <td><input type="button" onclick="delArctypeDo()" class="button" value="删除"/></td>
+                    <td><input type="button" class="button" onclick="panelClose('arctypeDel')" value="取消"/></td>
+                </tr>
+            </table>
+        </div>
+        <div class="lm_bottom">
+            <div class="lm_bottom_l"><em></em></div>
+        </div>
+    </div>
+</div>
+<!--弹出层二end-->
+
+</body>
+<script>
+    function add() {
+        location = "__GROUP__/category/add";
+    }
+
+    function panelClose(o) {
+        var obj = $('.' + o);
+        jl_fadeOut(obj);
+    }
+
+    function delArctypeDo() {
+        jl_fadeOut($('.arctypeDel'));
+        var items = $("#delitems").val();
+        $.post("__GROUP__/shopajax/delCategory", {items: items}, function (data) {
+            if (data != '') {
+                if (data['code'] == 1) {
+                    //jl_notify(1,"嘻嘻，删除栏目成功！");
+                    location.href = location.href;
+                } else {
+                    jl_notify(3, data['msg']);
+                }
+            }
+        }, 'json');
+    }
+
+    function showSon(obj, id, route) {
+        var status = $(obj).attr('_status');
+        var cls = route + '-' + id
+        if (status == 0) {
+            $(obj).attr('_status', 1);
+            $("tr[name='" + cls + "'],tr[name^='" + cls + "-']").fadeIn(300);
+            //$('.'+route+'-'+id).fadeIn(300);
+            $(obj).attr('src', '__IMG__/close.png');
+        } else if (status == 1) {
+            $(obj).attr('_status', 0);
+            $("tr[name='" + cls + "'],tr[name^='" + cls + "-']").fadeOut(300);
+            //$('.'+route+'-'+id).fadeOut(300);
+            $(obj).attr('src', '__IMG__/open.png');
+        } else {
+            jl_notify(2, "js错误！");
+        }
+    }
+
+    function changeOrder(id, order, fid, act) {
+        $.post("__GROUP__/shopajax/changeorder", {id: id, order: order, fid: fid, act: act}, function (data) {
+            if (data == 1) {
+                location.href = location.href;
+                location.href = location.href;
+            } else if (data == -1) {
+                jl_notify(2, "顺序调整失败！清稍后再试！");
+            } else if (data == -2) {
+                jl_notify(2, "顺序调整失败！没有可以交换的对象！");
+            } else {
+                jl_notify(2, "某一条数据写入失败！请联系管理员！");
+            }
+        })
+    }
+
+    function delArctype(items) {
+        if (items == '') {
+            jl_notify(3, "你没有选中任何项!");
+            return;
+        } else {
+            $("#delitems").val(items);
+            $('#del_items label').text(items);
+            var obj = $('.arctypeDel');
+            jl_fadeIn(obj);
+        }
+    }
+</script>
+</html>

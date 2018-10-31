@@ -1,0 +1,180 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>CMS</title>
+<link href="__CSS__/common.css" rel="stylesheet"/>
+<link href="__CSS__/right.css" rel="stylesheet"/>
+<link rel="stylesheet" href="__INC__/form/css/zebra_form.css" type="text/css"/>
+<script type="text/javascript" language="javascript" src="__JS__/jquery-1.7.2.min.js"></script>
+<link rel="stylesheet" href="__INC__/kindeditor/themes/default/default.css"/>
+<script charset="utf-8" src="__INC__/kindeditor/kindeditor.js"></script>
+<script charset="utf-8" src="__INC__/kindeditor/lang/zh_CN.js"></script>
+<script charset="utf-8" src="__INC__/kindeditor/plugins/code/prettify.js"></script>
+<script type="text/javascript" src="__INC__/form/js/highlight.js"></script>
+<script type="text/javascript" src="__INC__/form/js/zebra_form.js"></script>
+<script type="text/javascript" src="__INC__/form/js/functions.js"></script>
+<script type="text/javascript" src="__JS__/jquery.fancybox-1.0.0.js"></script>
+<link rel="stylesheet" type="text/css" href="__CSS__/fancy.css" media="screen" />
+<script charset="utf-8" src="__JS__/common.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //When page loads...
+        $(".tab_content").hide(); //Hide all content
+        $("ul.tabs li:first").addClass("active").show(); //Activate first tab
+        $(".tab_content:first").show(); //Show first tab content
+        //On Click Event
+        $("ul.tabs li").click(function () {
+            $("ul.tabs li").removeClass("active"); //Remove any "active" class
+            $(this).addClass("active"); //Add "active" class to selected tab
+            $(".tab_content").hide(); //Hide all tab content
+            var activeTab = $(this).find("a").attr("href"); //Find the href attribute value to identify the active tab + content
+            $(activeTab).fadeIn(); //Fade in the active ID content
+            return false;
+        });
+
+        $("#jl_imageView a").fancybox({
+            'zoomSpeedIn':	0,
+            'zoomSpeedOut':	0,
+            'overlayShow':	true
+        });
+    });
+</script>
+<!--圆角 兼容ie-->
+<!--[if IE]>
+<script type="text/JavaScript" src="js/curvycorners.src.js"></script>
+<script type="text/JavaScript">
+    curvyCorners.addEvent(window, 'load', initCorners);
+    function initCorners() {
+        var settings = {
+            tl: { radius: 2 },
+            tr: { radius: 2 },
+            //bl: { radius: 2 },
+            //br: { radius: 2 },
+            antiAlias: true
+        }
+        curvyCorners(settings, ".tabs");
+    }
+</script>
+<![endif]-->
+<style type="text/css">
+    .one {
+        background: #fcfcfc;
+    }
+</style>
+</head>
+<body>
+<!--右侧区域 begin-->
+<div class="right">
+    <!--当前位置 begin-->
+    <include file='common:crumbs'/>
+    <!--当前位置 end-->
+    <!--主体区域 begin-->
+    <div class="container">
+        <div class="alert_div">
+            <h4 class="alert_info"><span class="welcome">{$welcome}</span>您现在的位置是：{$current} </h4>
+            <h4 class="alert_what" style="display:none;"></h4>
+        </div>
+        <!--样式一 begin-->
+        <div class="stats">
+            <div class="lm_title">
+                <div class="lm_title_l"><em>{$current}</em></div>
+            </div>
+            <div class="lm_content">
+                <div class="tab_container">
+                    <div class="tab_content">
+                        <script type="text/javascript">
+                            function removeImg(obj) {
+                                $(obj).parent().parent().fadeOut(600, function () {
+                                    $(obj).parent().parent().remove();
+                                });
+                            }
+                            KindEditor.ready(function (K) {
+                                var imagesUpload = K.editor({
+                                    uploadJson : "{:U('admin/Editor/Index')}",
+                                    fileManagerJson : "{:U('admin/Editor/Index')}",
+                                    allowFileManager: true
+                                });
+                                K('#jl_selectImage').click(function () {
+                                    imagesUpload.loadPlugin('multiimage', function () {
+                                        imagesUpload.plugin.multiImageDialog({
+                                            clickFn: function (urlList) {
+                                                var div = K('#jl_imageView');
+                                                var j = 1;
+                                                K.each(urlList, function (i, url) {
+                                                    if (j % 2 == 0)
+                                                        var flag = "even";
+                                                    else
+                                                        var flag = "";
+                                                    var tempHtml = $('<tr class="row ' + flag + '"><td><a href="' + url['url'] + '"><img style="border:1px solid #1A1A1A;"  src="' + url['url'] + '" width="50px" /></a></td><td><label>排序：</label></td><td><input type="text" class="control text" style="width:20px" name="sort[]" value="" ></td><td><label>标题：</label></td><td><input type="hidden" name="images[]" value="' + url['url'] + '" ></input><input type="text" class="control text" name="intro[]" value="" /></td> <td><label>外链：</label></td><td><input type="text" class="control text" name="href[]" value="" /></td> <td colspan="2"><input type="button" class="control button"  value="移除" onclick="removeImg(this);" ></td></tr>');
+                                                    tempHtml.insertBefore($(".last_img"));
+                                                    j++;
+                                                });
+                                                imagesUpload.hideDialog();
+                                            }
+                                        });
+                                    });
+                                });
+                            });
+                        </script>
+                        <form name="imgUploadForm" id="imgUploadForm" action="{:U('form/imagesadd')}" method="post" class="Zebra_Form">
+                            <input type="hidden" name="gid" id="gid" value="{$gid}"/>
+                            <input type="hidden" name="type" value="{$type}" />
+                            <table class="Zebra_Form" width="100%" id="jl_imageView">
+                                <tbody>
+                                <tr class="row">
+                                    <td width="60px"><label>批量上传:</label></td>
+                                    <td colspan="8">
+                                        <input type="button" class="control button" id="jl_selectImage" value="浏览" style="float:left;"/>
+                                        <input type="button" class="button" onclick="setOrder()" value="保存排序" style="float:left;margin-left:50px;"/>
+                                    </td>
+                                </tr>
+                                {$goodsImgHtml}
+                                <tr class="row even last_img">
+                                    <td>&nbsp;</td>
+                                    <td colspan="8" valign="top">
+                                        <input style="float:left;" type="submit" name="btnsubmit" id="btnsubmit" value="确定" class="submit" />
+                                        <input type="button" name="my_reset" id="my_reset" value="返回" onclick="javascript:history.go(-1);" class="reset" style="float:left;margin-left:50px;" />
+                                        <div style="clear:both;"></div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="lm_bottom">
+                <div class="lm_bottom_l"><em></em></div>
+            </div>
+        </div>
+        <!--样式一 end-->
+    </div>
+    <!--主体区域 end-->
+</div>
+<!--右侧区域  end-->
+</body>
+</html>
+<script>
+    function setOrder() {
+        var orderjson = '';
+        $(".orderid").each(status = function (e) {
+            var id = $(this).attr("_id");
+            var v = $(this).val();
+            if (orderjson != '')
+                orderjson = orderjson + ',';
+            orderjson += "'" + id + "':'" + v + "'";
+        });
+        orderjson = "{" + orderjson + "}";
+        orderjson = eval('(' + orderjson + ')');
+        $.post("{:U('ajax/imagesSetOrder')}", {json: orderjson}, function (data) {
+            if (data == -1) {
+                jl_notify(2, "排序设置失败！");
+            } else if (data == -2) {
+                jl_notify(3, "排序序号不能重复！");
+            } else {
+                location.href = location.href;
+            }
+        });
+    }
+</script>

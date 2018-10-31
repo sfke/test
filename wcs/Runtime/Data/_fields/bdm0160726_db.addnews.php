@@ -1,0 +1,1 @@
+<?php	return array ( 0 => 'aid', 1 => 'txt', 2 => 'img', '_autoinc' => false, '_pk' => 'aid', '_type' => array ( 'aid' => 'int(11)', 'txt' => 'mediumtext', 'img' => 'varchar(250)', ), );?>

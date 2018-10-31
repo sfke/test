@@ -1,0 +1,94 @@
+@charset "utf-8";
+
+/*******************************************************CMS_Client*******************************************************/
+
+/*头部区域*/
+.jlcms_top {
+    background: url(../images/top_bg.jpg) repeat 0 0;
+    height: 90px;
+    width: 100%;
+}
+
+.jlcms_logo {
+    height: 60px;
+}
+
+.jlcms_nav {
+    width: 100%;
+    height: 30px;
+    overflow: hidden;
+    line-height: 20px;
+}
+
+.jlcms_nav ul li {
+    font-size: 13px;
+    font-weight: bold;
+    height: 30px;
+    float: left;
+    width: 70px;
+    text-align: center;
+    margin: 0 5px;
+}
+
+.jlcms_nav ul li a {
+    font-family: Tahoma, SimSun, sans-serif;
+    font-family: 微 软 雅 黑, "Microsoft Yahei", Tahoma !important;
+    color: #cce4fe;
+    font-size: 14px;
+}
+
+.jlcms_nav ul .nav_on {
+    background: url(../images/navli_on.jpg) no-repeat bottom;
+    width: 80px;
+    text-align: center;
+    line-height: 30px;
+	border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.jlcms_nav ul .nav_on a {
+    color: #0c3e7b;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.quick_menu {
+    background: url(../images/top_bg2.jpg) repeat-x 0 0;
+    height: 33px;
+    overflow: hidden;
+}
+
+.quick_menu .time {
+    width: 200px;
+    float: left;
+    display: inline;
+    background: url(../images/t_icon1.jpg) no-repeat 10px 10px;
+    padding-left: 30px;
+    color: #505050;
+    line-height: 33px;
+}
+
+.quick_menu .loginout {
+    width: 200px;
+    float: right;
+    display: inline;
+    color: #505050;
+    line-height: 33px;
+}
+
+.quick_menu .loginout span {
+    display: block;
+    float: left;
+    width: 60px;
+    margin-left: 10px;
+}
+
+.quick_menu .loginout .l_home {
+    background: url(../images/t_icon2.jpg) no-repeat 0 10px;
+    padding-left: 20px;
+}
+
+.quick_menu .loginout .l_out {
+    background: url(../images/t_icon3.jpg) no-repeat 0 10px;
+    padding-left: 20px;
+}

@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>CMS</title>
+<link href="__CSS__/common.css" rel="stylesheet"/>
+<link href="__CSS__/right.css" rel="stylesheet"/>
+<link rel="stylesheet" href="__INC__/form/css/zebra_form.css" type="text/css">
+<script type="text/javascript" language="javascript" src="__JS__/jquery-1.7.2.min.js"></script>
+<script charset="utf-8" src="__JS__/common.js"></script>
+<script type="text/javascript" language="javascript">
+    $(document).ready(function () {
+        $(".table_list tr").mouseover(function () {
+            $(this).addClass("one");
+        })
+        $(".table_list tr").mouseout(function () {
+            $(this).removeClass("one");
+        })
+    });
+</script>
+<style type="text/css">
+    .one {
+        background: #fcfcfc;
+    }
+
+    .infos_left {
+        padding: 0px;
+    }
+
+    .Zebra_Form .row input.button {
+        _width: 80px;
+        _padding: 2px 10px 3px;
+        _height: 22px;
+    }
+
+    .Zebra_Form .row input.text {
+        width: 110px;
+        _width: 90px;
+        _padding: 2px 10px 3px
+    }
+
+    .Zebra_Form .row input.button2 {
+        _width: 50px;
+        _padding: 0 0 0;
+        _overflow: hidden;
+    }
+
+    .Zebra_Form td {
+        _padding: 0 0 0 10px;
+    }
+
+</style>
+</head>
+<body>
+<!--右侧区域 begin-->
+<div class="right">
+    <!--当前位置 begin-->
+    <include file='common:crumbs'/>
+    <!--当前位置 end-->
+    <!--主体区域 begin-->
+    <div class="container">
+        <div class="alert_div">
+            <h4 class="alert_info"><span class="welcome">{$welcome}</span>您现在的位置是：{$current} </h4>
+            <h4 class="alert_what" style="display:none;"></h4>
+        </div>
+        <!--样式一 begin-->
+        <div class="stats">
+            <div class="lm_title">
+                <div class="lm_title_l"><em>操作面板</em></div>
+            </div>
+            <div class="lm_content">
+                <div id="panel">
+                    <div class="infos_left">
+                        <table class="Zebra_Form">
+                            <tr class="row">
+                                <td><label>操作:</label></td>
+                                <td><input type="button" class="button" onclick="location.href='__GROUP__/backup/backupArctype'" value="备份栏目"/></td>
+                                <td><input type="button" class="button" onclick="location.href='__GROUP__/backup/backupClean'" value="清空栏目备份"/></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <div class="lm_bottom">
+                <div class="lm_bottom_l"><em></em></div>
+            </div>
+        </div>
+        <!--样式一 end-->
+        <!--样式二 begin-->
+        <div class="stats">
+            <div class="lm_title">
+                <div class="lm_title_l"><em>{$current}</em></div>
+            </div>
+            <div class="lm_table">
+                <table cellpadding="0" cellspacing="0" width="100%" class="table_list">
+                    <tr class="title" align="center">
+                        <td>备份文件名</td>
+                        <td>大小</td>
+                        <td>时间</td>
+                        <td>操作</td>
+                    </tr>
+                    <volist name='list' id='vo'>
+                        <tr class="tr_line">
+                            <td colspan="10">
+                                <div></div>
+                            </td>
+                        </tr>
+                        <tr align="left">
+                            <td>{$vo.name}</td>
+                            <td>{$vo.size}</td>
+                            <td>{$vo.time}</td>
+                            <td width="90px">
+                                <a href="javascript:openpanel('recover','{$vo['name']}')">还原</a> | <a href="javascript:openpanel('del','{$vo['name']}')">删除</a>
+                            </td>
+                        </tr>
+                    </volist>
+                </table>
+            </div>
+            <div class="lm_table_bottom">
+                <div class="lm_table_bottom_l">
+                    <em>
+                        <div class="page"></div>
+                        <div class="clear"></div>
+                    </em>
+                </div>
+            </div>
+        </div>
+        <!--样式二 end-->
+    </div>
+    <!--主体区域 end-->
+</div>
+<!--右侧区域  end-->
+
+<!--弹出层二begin-->
+<div class="popupPanel">
+    <div class="stats">
+        <div class="lm_title">
+            <div class="lm_title_l"><em id="panelTitle">做什么？</em></div>
+        </div>
+        <div class="lm_content">
+            <table class="Zebra_Form" style="width:100%;">
+                <tr class="row">
+                    <td width="80"><label>已选文件：</label></td>
+                    <input type="hidden" id="controlitems" value=""/>
+                    <input type="hidden" id="panelaction" value=""/>
+                    <td colspan="2" id="checked_items"><label style="color:#FF00AE;"></label></td>
+                </tr>
+                <tr class="row">
+                    <td></td>
+                    <td><input type="button" onclick="panelDo()" class="button" value="确定"/></td>
+                    <td><input type="button" class="button" onclick="panelClose()" value="取消"/></td>
+                </tr>
+            </table>
+        </div>
+        <div class="lm_bottom">
+            <div class="lm_bottom_l"><em></em></div>
+        </div>
+    </div>
+</div>
+<!--弹出层二end-->
+</body>
+<script>
+    //开启panel窗口
+    function openpanel(act, item) {
+        if (item == '') {
+            jl_notify(3, "你没有选中任何项！");
+            return;
+        }
+        $("#controlitems").val(item);
+        $('#checked_items label').text(item);
+        if (act == 'del') {
+            $("#panelTitle").text("你确定要删除这些备份文件？");
+            $("#panelaction").val("del");
+            var obj = $('.popupPanel');
+            jl_fadeIn(obj);
+        } else if (act == 'recover') {
+            $("#panelTitle").text("你确定要用该备份还原栏目？");
+            $("#panelaction").val("recover");
+            var obj = $('.popupPanel');
+            jl_fadeIn(obj);
+        } else {
+            jl_notify(3, "不知道你到底要干什么！");
+            return;
+        }
+    }
+
+    //关闭panel窗口
+    function panelClose() {
+        var obj = $('.popupPanel');
+        jl_fadeOut(obj);
+    }
+
+    //panel执行操作
+    function panelDo() {
+        var act = $("#panelaction").val();
+        if (act == '') {
+            jl_notify(3, "不知道你到底要干什么！");
+            return;
+        }
+
+        if (act == 'del') {
+            jl_fadeOut($('.popupPanel'));
+            var items = $("#controlitems").val();
+            $.post("__GROUP__/backup/deletebak", {file: items}, function (data) {
+                if (data == -1) {
+                    jl_notify(2, "删除备份文件失败！");
+                } else if (data == 1) {
+                    location.href = location.href;
+                } else {
+                    jl_notify(2, "删除备份文件失败！");
+                }
+
+            })
+        } else if (act == 'recover') {
+            jl_fadeOut($('.popupPanel'));
+            var items = $("#controlitems").val();
+            $.post("__GROUP__/backup/recover", {file: items}, function (data) {
+                if (data == -1) {
+                    jl_notify(2, "还原栏目失败！");
+                } else if (data == 1) {
+                    jl_notify(1, "还原栏目还原成功！");
+                } else {
+                    jl_notify(2, "还原栏目失败！");
+                }
+            })
+        } else {
+            jl_notify(3, "不知道你到底要干什么！");
+            return;
+        }
+    }
+</script>
+</html>

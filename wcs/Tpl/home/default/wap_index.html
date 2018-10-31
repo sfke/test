@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<title>{$jl_title}</title>
+<meta name="Keywords" content="{$jl_key}">
+<meta name="Description" content="{$jl_desc}">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
+<link rel="stylesheet" href="__BASE__/wap/css/css.css">
+<link rel="stylesheet" href="__BASE__/wap/css/iconfont.css">
+<link rel="stylesheet" href="__BASE__/wap/css/swiper.3.1.7.min.css">
+<script src="__BASE__/wap/js/jquery.js" type="text/javascript"></script>
+<script src="__BASE__/wap/js/jquery.SuperSlide.js" type="text/javascript"></script>
+<script src="__BASE__/wap/js/swiper.3.1.7.jquery.min.js"></script>
+
+</head>
+<body>
+<header>
+  <div class="top_black"><a href="javascript:window.history.go(-1);"><img src="__BASE__/wap/images/top_left.jpg" width="16" height="33"></a></div>
+  <div class="logo"><img src="__BASE__/wap/images/logo.jpg"></div>
+  <include file='wcs/Tpl/home/default/wap_nav.html'/>
+</header>
+<div class="swiper-container clearfix">
+  <div class="swiper-wrapper">
+    <loop typeid="61" table="addiframe" where="status=1" orderby="sortrank" orderway="desc">
+		<div class="swiper-slide"> <div class="pic"><img src="{$field['img']}" alt=""></div></div>
+    </loop>
+  </div>
+</div>
+
+<script type="text/javascript">
+  var mySwiper = new Swiper('.swiper-container',{
+    onInit: function(swiper){ //Swiper2.x的初始化是onFirstInit
+    swiperAnimateCache(swiper); 
+    swiperAnimate(swiper); 
+  }, 
+  onSlideChangeEnd: function(swiper){ 
+    swiperAnimate(swiper); 
+  } 
+  });
+</script>
+<!-- banner -->
+
+    <div class="txtScroll-left clearfix">
+      <div class="bd">
+        <ul class="infoList">
+          <arclist typeid="8" row="5" titlelen="30" addfield="on">
+           <li><span>通知公告:</span><a href="http://www.neeq.com.cn/disclosure/announcement.html?companyCode=831331">{$field['title']}</a></li>
+          </arclist> 
+        </ul>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+     jQuery(".txtScroll-left").slide({mainCell:".bd ul",autoPage:true,effect:"leftLoop",autoPlay:true,vis:1});
+    </script>
+<!-- news -->
+<section class="index_menu1 clearfix">
+  <ul>
+    <li><a href="{:listUrl(51)}"><i style="background: url('__BASE__/wap/images/pro1.jpg') no-repeat center center;-webkit-background-size: cover;background-size: cover;"></i><span>产品中心</span></a></li>
+    <li><a href="{:listUrl(52)}"><i style="background: url('__BASE__/wap/images/pro2.jpg') no-repeat center center;-webkit-background-size: cover;background-size: cover;"></i><span>成功案例</span></a></li>
+  </ul>
+</section>
+<div class="index_new clearfix">
+  <arclist typeid="17" row="3" titlelen="20" addfield="on">   
+  <dl>
+    <dt><a href="{:U('Wap/view',array('aid'=>$field['id'],'tid'=>50))}" style="background: url({$field['img']|default=$defaultimg}) center center no-repeat ;-webkit-background-size: cover;background-size: cover;"></a></dt>
+    <dd>
+      <a href="{:U('Wap/view',array('aid'=>$field['id'],'tid'=>50))}">
+        <h5>{$field['title']}</h5>
+        <p>{$field['desc']}</p>
+        <h6><span>{$field['pubdate']|date='Y-m-d',###}</span><i>更多 > </i></h6>
+      </a>
+    </dd>
+  </dl>
+  </arclist>
+</div>
+<include file='wcs/Tpl/home/default/wap_foot.html'/>
+</body>
+</html>

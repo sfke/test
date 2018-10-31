@@ -1,0 +1,45 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>{$jl_title}站内搜索</title>
+<meta name="Keywords" content="{$jl_key}">
+<meta name="Description" content="{$jl_desc}">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	
+	<link rel="stylesheet" href="__BASE__/css/animate.min.css"/>
+	<link rel="stylesheet" href="__BASE__/css/common.css" />
+	<link rel="stylesheet" href="__BASE__/css/html5.css">
+    <!--[if lte IE 8]>
+	<script src="__BASE__/js/html5.js" type="text/javascript"></script>
+	<![endif]-->
+	<script type="text/javascript" src="__BASE__/js/jquery1.42.min.js"></script>
+	<script type="text/javascript" src="__BASE__/js/jquery.SuperSlide.2.1.1.js"></script>
+	<script type="text/javascript" src="__BASE__/js/common.js"></script>
+	<script src="__BASE__/js/wow.min.js"></script>   
+</head>
+<body style="background: #e6eef2;">
+<include file='wcs/Tpl/home/default/header.html'/>
+<!-- 导航 -->
+<div class="main main_20 clearfix">
+	<ul class="list_news clearfix">
+       <volist name='rsArr' id='vo' key='i'> 
+		<li><a href="{:contentUrl($vo['id'])}">{$vo.title}</a><span>{:jldate($vo['senddate'])}</span></li>
+      </volist>
+	 
+	</ul>
+	<div class="page clearfix">
+		{$pageline}
+	</div>
+
+</div>
+
+
+<include file='wcs/Tpl/home/default/footer.html'/>
+
+</body>
+</html>       
+ 
+   
+  

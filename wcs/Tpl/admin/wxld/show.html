@@ -1,0 +1,262 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>CMS</title>
+    <link href="__CSS__/common.css" rel="stylesheet"/>
+    <link href="__CSS__/right.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="__INC__/form/css/zebra_form.css" type="text/css">
+    <script language="javascript"> var publicUrlInc = "__INC__"; var dbpre="{:C('DB_PREFIX')}";</script>
+    <script type="text/javascript" language="javascript" src="__JS__/jquery-1.7.2.min.js"></script>
+    <script language="javascript" src="__INC__/wxld/wxld.js"></script>
+    <script type="text/javascript" src="__JS__/common.js"></script>
+    <script charset="utf-8" src="__INC__/kindeditor/kindeditor.js"></script>
+    <link rel="stylesheet" href="__INC__/kindeditor/themes/default/default.css"/>
+    <style type="text/css">
+        .one {
+            background: #fcfcfc;
+        }
+    </style>
+</head>
+<body>
+<!--右侧区域 begin-->
+<div class="right">
+    <!--当前位置 begin-->
+    <include file='common:crumbs'/>
+    <!--当前位置 end-->
+    <!--主体区域 begin-->
+    <div class="container">
+        <div class="alert_div">
+            <h4 class="alert_info"><span class="welcome">{$welcome}</span>您现在的位置是：{$current} </h4>
+            <h4 class="alert_what" style="display:none;"></h4>
+        </div>
+        <!--样式一 begin-->
+        <div class="stats">
+            <div class="lm_title">
+                <div class="lm_title_l"><em>联动类别添加</em></div>
+            </div>
+            <div class="lm_content">
+                <input type="hidden" name='cid' id="wxld" value="{$wxld}"/>
+                <table class="Zebra_Form">
+                    <!--tr class="row">
+                    <td><label>已有类别:</label></td>
+                    <td><select name="typeid" id="typeid" class="control" >
+                    <option value="">- 请选择 -</option>
+                    {$options}
+                    </select>
+                    </td>
+                    </tr-->
+
+                    <!--tr class="row">
+                    <td><label>选中项&nbsp;&nbsp;:</label></td>
+                    <td><input type="text" name="nowtype" id="nowtype" value="" class="control text"/>
+                    </td>
+                    <td>
+                    <input type="button" id="update" value="修改" class="button">
+                    </td>
+                    <td>
+                    <input type="button"id="del" value="删除" class="button">
+                    </td>
+                    </tr-->
+                    <tr class="row">
+                        <td><label>新类别&nbsp;&nbsp;:</label></td>
+                        <td><input type="text" id="newtype" value="" class="control text">
+                        </td>
+                        <td>
+                            <input type="button" id="add" value="添加" class="button">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="lm_bottom">
+                <div class="lm_bottom_l"><em></em></div>
+            </div>
+        </div>
+        <!--样式一 end-->
+        <!--样式三 begin-->
+        <div class="stats">
+            <div class="lm_title">
+                <div class="lm_title_l"><em>联动内容管理</em></div>
+            </div>
+            <div class="lm_content">
+                <table class="Zebra_Form">
+                    <tr class="row">
+                        <td><label>无限联动:</label></td>
+                        <td colspan="3">
+                            <div class="select_ld"></div>
+                        </td>
+                    </tr>
+                    <tr class="row">
+                        <td><label>选中项&nbsp;&nbsp;:</label></td>
+                        <td><input type="text" id="wxldname" class="control text" value=""/></td>
+                        <td>
+                            <input type="button" id="update2" value="修改" class="button">
+                        </td>
+                        <td>
+                            <input type="button" id="del2" value="删除" class="button">
+                        </td>
+                    </tr>
+                    <tr class="row">
+                        <td><label>添加子类:</label></td>
+                        <td><input type="text" id="newld" value="" class="control text">
+                        </td>
+                        <td>
+                            <input type="button" id="add2" value="添加" class="button">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="lm_bottom">
+                <div class="lm_bottom_l"><em></em></div>
+            </div>
+        </div>
+        <!--样式三 end-->
+    </div>
+    <!--主体区域 end-->
+</div>
+<!--右侧区域  end-->
+</body>
+<script>
+    $(function () {
+        /* $("#typeid").change(function(){
+         var id = $("#typeid").val();
+         var title = $.trim($("#typeid option:selected").text());
+         $("#nowtype").val(title);
+         }) */
+        $("#update").click(function () {
+            var id = $("#typeid").val();
+            var title = $.trim($("#nowtype").val());
+            if (title == '') {
+                //alert("类别名不能为空!");
+                jl_notify(3, "类别名不能为空!");
+                return;
+            }
+            $.post("{:U('ajax/wxldajax')}", {
+                action: 'update',
+                typename: title,
+                id: id
+            }, function (data) {
+                if (data != 1) {
+                    jl_notify(2, "类别名修改失败!");
+                    return;
+                } else {
+                    //location.href=location.href;
+                    //var obj = $("select[id='typeid'] option[value='"+id+"']");
+                    $("select option[value='" + id + "']").text(title);
+                    jl_notify(1, "修改联动大类成功！");
+                }
+            });
+        });
+        $("#add").click(function () {
+            var title = $.trim($("#newtype").val());
+            if (title == '') {
+                jl_notify(3, "类别名不能为空!");
+                return;
+            }
+            $.post("{:U('ajax/wxldajax')}", {
+                action: 'add',
+                typename: title
+            }, function (data) {
+                if (data != 1) {
+                    jl_notify(2, "类别添加失败!");
+                    return;
+                } else {
+                    //kalert("添加成功！");
+                    location.href = location.href;
+                }
+            });
+        });
+
+        $("#del").click(function () {
+            var id = $("#typeid").val();
+            if (id == '') {
+                jl_notify(3, "你没有选中任何项!");
+                return;
+            }
+            $.post("{:U('ajax/wxldajax')}", {
+                action: 'del',
+                id: id
+            }, function (data) {
+                if (data != 1) {
+                    jl_notify(2, "类别删除失败!");
+                    return;
+                } else {
+                    //kalert("删除成功！");
+                    //location.href=location.href;
+                    //$("select option[value='"+id+"']").remove("select option[value='"+id+"']");
+                }
+            });
+        });
+
+        $("#update2").click(function () {
+            var id = $("#wxld").val();
+            var title = $.trim($("#wxldname").val());
+            if (title == '') {
+                jl_notify(3, "子类名不能为空!");
+                return;
+            }
+            $.post("{:U('ajax/wxldajax')}", {
+                action: 'update2',
+                typename: title,
+                id: id
+            }, function (data) {
+                if (data != 1) {
+                    jl_notify(2, "子类名修改失败!");
+                    return;
+                }
+                else {
+                    //kalert("修改成功！");
+                    location.href = location.href;
+                    //$("select option[value='"+id+"']").text(title);
+                    //jl_notify(1,"嘻嘻，修改成功！");
+                }
+            });
+        });
+
+        $("#add2").click(function () {
+            var title = $.trim($("#newld").val());
+            var fid = $("#wxld").val();
+            if (title == '') {
+                jl_notify(3, "子类名不能为空!");
+                return;
+            }
+            $.post("{:U('ajax/wxldajax')}", {
+                action: 'add2',
+                typename: title,
+                fid: fid
+            }, function (data) {
+                if (data != 1) {
+                    jl_notify(2, "子类添加失败!");
+                    return;
+                }
+                else {
+                    //kalert("添加成功！");
+                    location.href = location.href;
+                }
+            });
+        });
+
+        $("#del2").click(function () {
+            var id = $("#wxld").val();
+            if (id == '') {
+                jl_notify(3, "你没有选中任何项!");
+                return;
+            }
+            $.post("{:U('ajax/wxldajax')}", {
+                action: 'del2',
+                id: id
+            }, function (data) {
+                if (data != 1) {
+                    jl_notify(2, "删除失败,请先删除该层级下的内容!");
+                    return;
+                } else {
+                    //kalert("删除成功！");
+                    location.href = location.href;
+                }
+            });
+        });
+        if ($("#wxld").val() == '')getLD(dbpre+'wxld', 'id', 'fid', 'typename', 'id', 0);
+        else  regetLD(dbpre+'wxld', 'id', 'fid', 'typename', 'id', 0);
+    });
+</script>
+</html>

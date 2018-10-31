@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<title>{$jl_title}</title>
+<meta name="Keywords" content="{$jl_key}">
+<meta name="Description" content="{$jl_desc}">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
+<link rel="stylesheet" href="__BASE__/wap/css/css.css">
+<link rel="stylesheet" href="__BASE__/wap/css/iconfont.css">
+<link rel="stylesheet" href="__BASE__/wap/css/swiper.3.1.7.min.css">
+<script src="__BASE__/wap/js/jquery.js" type="text/javascript"></script>
+<script src="__BASE__/wap/js/jquery.SuperSlide.js" type="text/javascript"></script>
+<script src="__BASE__/wap/js/swiper.3.1.7.jquery.min.js"></script>
+</head>
+<body>
+<header>
+  <div class="top_black"><a href="javascript:window.history.go(-1);"><img src="__BASE__/wap/images/top_left.jpg" width="16" height="33"></a></div>
+  <div class="logotxt">{$arctype['name']}</div>
+  <include file='wcs/Tpl/home/default/wap_nav.html'/>
+</header>
+<!--内页内容-->
+<section class="ny_cont main"> 
+  <!--新闻-->
+<div class="index_new clearfix">
+ <if condition="$tid eq 50">
+  <pagelist typeid="17" pagesize="6" addfield="on">
+    <dl>
+    <dt><a href="{:U('Wap/view',array('aid'=>$field['id'],'tid'=>$tid))}" style="background: url({$field['img']|default=$defaultimg}) center center no-repeat ;-webkit-background-size: cover;background-size: cover;"></a></dt>
+    <dd>
+      <a href="{:U('Wap/view',array('aid'=>$field['id'],'tid'=>$tid))}">
+        <h5>{$field['title']}</h5>
+        <p>{$field['desc']} </p>
+        <h6><span>{$field['pubdate']|date="Y-m-d",###}</span><i>更多 > </i></h6>
+      </a>
+    </dd>
+    </dl>
+   </pagelist> 
+  <elseif condition="$tid eq x" />
+  
+  </if>
+  
+</div>
+  <!--新闻 end-->
+</section>
+  <div class="page clearfix">
+    {$pageline}
+  </div> 
+<include file='wcs/Tpl/home/default/wap_foot.html'/>
+</body>
+</html>

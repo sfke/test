@@ -1,0 +1,176 @@
+@charset "utf-8";
+/*左侧区域*/
+html {
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.left {
+    width: 100%;
+    height: 100%;
+}
+
+.user {
+    background: url(../images/secondary_bar.jpg) repeat-x #F1F1F4;
+    height: 33px;
+    width: 100%;
+}
+
+.user p {
+    background: url(../images/icn_user.png) no-repeat left center;
+    color: #666666;
+    font-weight: bold;
+    height: 35px;
+    line-height: 35px;
+    margin: 0 0 0 6%;
+    text-indent: 25px;
+    width: 85%;
+}
+
+.search {
+    height: 45px;
+    padding-top: 15px;
+}
+
+.quick_search {
+    background: url(../images/search_bg.jpg) no-repeat center;
+    color: #CCCCCC;
+    height: 31px;
+    text-indent: 30px;
+    width: 315px;
+    margin: 0 auto;
+}
+
+.search_txt {
+    border: 0;
+    width: 200px;
+    vertical-align: middle;
+    height: 20px;
+    margin-top: 4px;
+    _margin-left: 40px;
+}
+
+.nav {
+    width: 98%;
+    margin: 0 auto;
+    _width: 91%;
+}
+
+.nav h3 {
+    color: #1F1F20;
+    display: block;
+    font-size: 13px;
+    padding: 10px 6% 10px 6%;
+    width: 90%;
+    border-bottom: 1px dotted #9c9c9c;
+    padding-bottom: 10px;
+}
+
+.nav ul {
+    width: 243px;
+    margin: 0 auto;
+}
+
+.nav ul li {
+    background: url(../images/left_nav_bg.jpg) no-repeat center top;
+    height: 39px;
+    line-height: 38px;
+    text-align: center;
+    margin-top: 6px;
+}
+
+.nav ul li a {
+    color: #656567;
+}
+
+.toggle li {
+    margin: 0 6% 0 12%;
+    padding-left: 25px;
+}
+
+.toggle li a {
+    color: #666666;
+    display: inline-block;
+    line-height: 17px;
+    margin: 2px 0;
+}
+
+.icn_new_article {
+    background: url(../images/icn_new_article.png) no-repeat left center;
+}
+
+.icn_edit_article {
+    background: url(../images/icn_edit_article.png) no-repeat left center;
+}
+
+.icn_categories {
+    background: url(../images/icn_categories.png) no-repeat left center;
+}
+
+.icn_tags {
+    background: url(../images/icn_tags.png) no-repeat left center;
+}
+
+.icn_add_user {
+    background: url(../images/icn_add_user.png) no-repeat left center;
+}
+
+.icn_view_users {
+    background: url(../images/icn_view_users.png) no-repeat left center;
+}
+
+.icn_profile {
+    background: url(../images/icn_profile.png) no-repeat left center;
+}
+
+.icn_folder {
+    background: url(../images/icn_folder.png) no-repeat left center;
+}
+
+.icn_photo {
+    background: url(../images/icn_photo.png) no-repeat left center;
+}
+
+.icn_audio {
+    background: url(../images/icn_audio.png) no-repeat left center;
+}
+
+.icn_video {
+    background: url(../images/icn_video.png) no-repeat left center;
+}
+
+.icn_settings {
+    background: url(../images/icn_settings.png) no-repeat left center;
+}
+
+.icn_security {
+    background: url(../images/icn_security.png) no-repeat left center;
+}
+
+.icn_jump_back {
+    background: url(../images/icn_jump_back.png) no-repeat left center;
+}
+
+/*左侧固定*/
+.nav_zone {
+    overflow-y: scroll;
+    position: relative;
+    top: 33px;
+}
+
+.nav {
+    position: absolute;
+}
+
+.fix {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    _position: absolute;
+    _top: expression(eval(document.documentElement.scrollTop+ (parseInt(this.currentStyle.marginTop,10)||0)));
+    overflow: visible;
+    height: 33px;
+    overflow: hidden;
+    background: #E0E0E3;
+}

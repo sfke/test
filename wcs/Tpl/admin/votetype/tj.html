@@ -1,0 +1,255 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>CMS</title>
+    <link href="__CSS__/common.css" rel="stylesheet"/>
+    <link href="__CSS__/right.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="__INC__/form/css/zebra_form.css" type="text/css">
+    <link href="__CSS__/ui/jquery-ui.css" type="text/css" rel="stylesheet"/>
+    <link rel="stylesheet" href="__INC__/kindeditor/themes/default/default.css"/>
+    <script type="text/javascript" language="javascript" src="__JS__/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="__JS__/ui/jquery-ui-datepicker.js"></script>
+    <script charset="utf-8" src="__INC__/kindeditor/kindeditor.js"></script>
+    <script charset="utf-8" src="__INC__/kindeditor/lang/zh_CN.js"></script>
+    <script charset="utf-8" src="__JS__/common.js"></script>
+    <script type="text/javascript" language="javascript">
+        $(document).ready(function () {
+            $(".table_list tr").mouseover(function () {
+                $(this).addClass("one");
+            })
+            $(".table_list tr").mouseout(function () {
+                $(this).removeClass("one");
+            })
+        });
+    </script>
+    <style type="text/css">
+        #vote_tj {
+            margin: 0px 20px;
+        }
+
+        #vote_tj tr {
+            height: 20px;
+        }
+
+        #vote_tj th {
+            text-align: left;
+        }
+
+        #vote_tj td {
+            padding-left: 20px;
+        }
+
+        #vote_tj .tj_bar {
+        }
+    </style>
+
+    <style type="text/css">
+        #graphbox {
+            border: 1px solid #e7e7e7;
+            padding: 10px;
+            width: 545px;
+            background-color: #f8f8f8;
+            margin: 5px 0;
+        }
+        .itemname {
+            float: left;
+            width: 160px;
+            font-weight: 700;
+            font-size: 12px;
+            line-height: 18px;
+            height: 18px;
+            padding: 2px;
+            text-align: left;
+            margin-right: atuo;
+        }
+        .percent {
+            width: 150px;
+            float: left;
+            font-size: 12px;
+            line-height: 14px;
+            height: 18px;
+            padding: 2px;
+            color: #555;
+            text-align: left;
+            margin-right: 3px;
+        }
+        .graph {
+            position: relative;
+            background-color: #F0EFEF;
+            border: 1px solid #cccccc;
+            font-size: 12px;
+            width: 400px;
+            font-weight: 700;
+            float: left;
+            margin-right: 3px;
+        }
+        .color1, .color2, .color3, .color4, .color5 {
+            position: relative;
+            text-align: left;
+            color: #ffffff;
+            height: 14px;
+            line-height: 14px;
+            font-family: Arial;
+            display: block;
+        }
+        .graph .color1 {
+            background-color: #669999;
+        }
+        .graph .color2 {
+            background-color: #6699FF;
+        }
+        .graph .color3 {
+            background-color: #FF9900;
+        }
+        .graph .color4 {
+            background-color: #FF3333;
+        }
+        .graph .color5 {
+            background-color: #990000;
+        }
+        .font1 {
+            color: #669999;
+        }
+        .font2 {
+            color: #6699FF;
+        }
+        .font3 {
+            color: #FF9900;
+        }
+        .font4 {
+            color: #FF3333;
+        }
+        .font5 {
+            color: #990000;
+        }
+    </style>
+</head>
+<body>
+<!--右侧区域 begin-->
+<div class="right">
+    <!--当前位置 begin-->
+    <include file='common:crumbs'/>
+    <!--当前位置 end-->
+    <!--主体区域 begin-->
+    <div class="container">
+        <div class="alert_div">
+            <h4 class="alert_info"><span class="welcome">{$welcome}</span>您现在的位置是：{$current} </h4>
+            <h4 class="alert_what" style="display:none;"></h4>
+        </div>
+        <!--样式一 begin-->
+        <div class="stats">
+            <div class="lm_title">
+                <div class="lm_title_l"><em>操作面板</em></div>
+            </div>
+            <div class="lm_content">
+                <div id="panel">
+                    <div class="infos_left">
+                        <form action="" method="get" onsubmit="return checkSub()">
+                            <input type="hidden" name="id" value="{$id}"/>
+                            <table class="Zebra_Form">
+                                <tr class="row">
+                                    <td><label>开始时间:</label></td>
+                                    <td><input type="text" name="sdate" id="sdate" value="{$sdate}" class="text date" readonly/></td>
+                                    <td><label>结束时间:</label></td>
+                                    <td><input type="text" name="edate" id="edate" value="{$edate}" class="text date" readonly/></td>
+                                    <td><input type="submit" class="button" value="确定"/></td>
+                                    <td><input type="button" class="button" onclick="javascript:location.href='__GROUP__/votetype/exttj?id={$id}'" value="留言"/></td>
+                                    <td><input type="button" class="button" onclick="javascript:location.href='__GROUP__/votetype/show'" value="返回"/></td>
+                                </tr>
+                            </table>
+                        </form>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <div class="lm_bottom">
+                <div class="lm_bottom_l"><em></em></div>
+            </div>
+        </div>
+        <!--样式一 end-->
+        <!--样式一 begin-->
+        <div class="stats">
+            <div class="lm_title">
+                <div class="lm_title_l"><em>{$votetypeArr['title']}</em></div>
+            </div>
+            <div class="lm_content">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" id="vote_tj">
+                    <?php
+                    $mq = M("Voteq");
+                    $ma = M("Votea");
+                    $mtj =M("Votepoll");
+                    $qArr = $mq->where("fid=".$id)->select();
+                    $name_size = 0;
+                    foreach($qArr as $k => $v){
+                    $name_size++;
+                    ?>
+                    <tr>
+                        <th class="dcbt">{$k+1}. {$v['title']}<span></span></th>
+                    </tr>
+                    <?php
+                    $aArrTemp = array();
+                    $aArrTemp = $ma->where("fid=".$v['id'])->select();
+                    $map = array();
+                    $map['date'] = array("BETWEEN","$sdate,$edate");
+                    $map['fid'] = array("eq",$v['id']);
+
+                    $aPollSum = $mtj->where($map)->sum("poll");
+                    //echo $mtj->getLastSql()."<br/>";
+
+                    if(!empty($aArrTemp)){
+                    foreach($aArrTemp as $v2){
+                    $map = array();
+                    $v2_poll = 0;
+                    $map['date'] = array("BETWEEN","$sdate,$edate");
+                    $map['id'] = array("eq",$v2['id']);
+                    $v2_poll = $mtj->where($map)->sum("poll");
+                    if(empty($v2_poll)) $v2_poll = 0;
+                    $bili = number_format($v2_poll/$aPollSum*100,2);
+                    echo '<tr>
+                        <td>
+                            <div class="little_box">
+                                <div class="itemname font1">'.$v2['title'].'：</div>
+                                <div class="graph"><span class="color'.round(($bili/10)/2).'" style="width:'.$bili.'%;">&nbsp;</span>
+                                </div>
+                                <div class="percent font'.round(($bili/10)/2).'">'.$bili.'% （'.$v2_poll.'）</div>
+                            </div>
+                        </td>
+                    </tr>';
+                          }
+                       }
+                    }?>
+                </table>
+            </div>
+            <div class="lm_bottom">
+                <div class="lm_bottom_l"><em></em></div>
+            </div>
+        </div>
+        <!--样式一 end-->
+    </div>
+    <!--主体区域 end-->
+</div>
+<!--右侧区域  end-->
+</body>
+<script>
+    $(function () {
+        $(".date").datepicker({yearRange: "1949:2050"});
+    });
+
+    function checkSub() {
+        if ($("#sdate").val() == '' || $("#edate").val() == '') {
+            jl_notify(2, "请选择开始时间和结束时间！");
+            return false;
+        }
+        var starttime = new Date(($("#sdate").val()).replace(/-/g, "/"));
+        var endtime = new Date(($("#edate").val()).replace(/-/g, "/"));
+        if (endtime < starttime) {
+            jl_notify(2, "结束时间应该大于开始时间");
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+</script>
+</html>

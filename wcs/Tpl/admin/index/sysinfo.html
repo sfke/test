@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title></title>
+    <script type="text/javascript" src="__JS__/jquery-1.7.2.min.js"></script>
+    <script src="__JS__/meter/raphael.2.1.0.min.js"></script>
+    <script src="__JS__/meter/justgage.1.0.1.min.js"></script>
+    <script>
+        var cpuInfo;
+        var memoryInfo;
+        var swapInfo;
+        $(function () {
+            var cpuInfo = new JustGage({
+                id: "cpu",
+                value: getRandomInt(20, 30),
+                min: 0,
+                max: 100,
+                title: "CPU使用率 ",
+                label: "%",
+                levelColors: [
+                    "#B2CF45",
+                    "#00C7EF",
+                    "#CF3333"
+                ]
+            });
+            var memoryInfo = new JustGage({
+                id: "memory",
+                value: getRandomInt(20, 30),
+                min: 0,
+                max: 100,
+                title: "内存使用率 ",
+                label: "%",
+                levelColors: [
+                    "#6DA2DE",
+                    "#FF00AE",
+                    "#CF3333"
+                ]
+            });
+            var swapInfo = new JustGage({
+                id: "swap",
+                value: getRandomInt(20, 30),
+                min: 0,
+                max: 100,
+                title: "交换区使用率 ",
+                label: "%",
+                levelColors: [
+                    "#EC7600",
+                    "#FF6300",
+                    "#D0FF00"
+                ]
+            });
+            setInterval(function () {
+                cpuInfo.refresh(getRandomInt(30, 40));
+                memoryInfo.refresh(getRandomInt(30, 40));
+                swapInfo.refresh(getRandomInt(30, 40));
+            }, 2000);
+        });
+    </script>
+    <style>
+        #cpu {
+            width: 400px;
+            height: 320px;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        #memory {
+            width: 400px;
+            height: 320px;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        #swap {
+            width: 400px;
+            height: 320px;
+            display: inline-block;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div id="cpu"></div>
+<div id="memory"></div>
+<div id="swap"></div>
+</body>
+</html>

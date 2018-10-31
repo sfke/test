@@ -1,0 +1,6 @@
+@CHARSET "UTF-8";
+.collapse{display:none;}
+.pagesize{ padding:4px; margin:10px 3px;text-align: center;clear:both;}
+.pagesize A{ border:1px solid #cd8e67; padding:3px 6px;margin:2px; color:#e06b23;TEXT-DECORATION: none}
+.pagesize A:hover{background:#e26d1f;border:1px solid #cd8e67; color:#fff;}
+.pagesize .on{ background:#e26d1f;border:1px solid #cd8e67;padding:3px 6px;font-weight:bold;margin:2px;COLOR: #fff;}
